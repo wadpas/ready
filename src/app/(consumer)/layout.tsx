@@ -2,6 +2,8 @@ import Link from 'next/link'
 import { ReactNode, Suspense } from 'react'
 import { SignedIn, SignedOut, SignInButton, UserButton } from '@clerk/nextjs'
 import { Button } from '@/components/ui/button'
+import { getCurrentUser } from '@/services/clerk'
+import { canAccessAdminPages } from '../permissions/general'
 
 export default function ConsumerLayout({ children }: Readonly<{ children: ReactNode }>) {
   return (
@@ -23,12 +25,13 @@ function Navbar() {
         </Link>
         <Suspense>
           <SignedIn>
+            <AdminLink />
             <Link
               className='px-2 hover:underline'
               href='/account'>
               Акаунт
             </Link>
-            <div className='size-8 self-center'>
+            <div className='self-center size-8'>
               <UserButton
                 appearance={{
                   elements: {
@@ -50,5 +53,19 @@ function Navbar() {
         </Suspense>
       </nav>
     </header>
+  )
+}
+
+async function AdminLink() {
+  const user = await getCurrentUser({ allData: true })
+  console.log(user.user?.name)
+  if (!canAccessAdminPages(user)) return null
+
+  return (
+    <Link
+      className='flex items-center px-2 hover:bg-accent/10'
+      href='/admin'>
+      Admin
+    </Link>
   )
 }
