@@ -3,32 +3,24 @@ import type { Serialize, Simplify } from "nitropack/types";
 declare module "nitropack/types" {
   type Awaited<T> = T extends PromiseLike<infer U> ? Awaited<U> : T
   interface InternalApi {
-    '/api/books': {
-      'default': Simplify<Serialize<Awaited<ReturnType<typeof import('../../server/api/books').default>>>>
+    '/api/auth/github': {
+      'get': Simplify<Serialize<Awaited<ReturnType<typeof import('../../server/api/auth/github.get').default>>>>
+    }
+    '/api/auth/login': {
+      'post': Simplify<Serialize<Awaited<ReturnType<typeof import('../../server/api/auth/login.post').default>>>>
+    }
+    '/api/auth/register': {
+      'post': Simplify<Serialize<Awaited<ReturnType<typeof import('../../server/api/auth/register.post').default>>>>
     }
     '/__nuxt_error': {
       'default': Simplify<Serialize<Awaited<ReturnType<typeof import('../../node_modules/nuxt/dist/core/runtime/nitro/renderer').default>>>>
     }
-    '/api/_content/query/:qid/**:params': {
-      'get': Simplify<Serialize<Awaited<ReturnType<typeof import('../../node_modules/@nuxt/content/dist/runtime/server/api/query').default>>>>
+    '/api/_auth/session': {
+      'delete': Simplify<Serialize<Awaited<ReturnType<typeof import('../../node_modules/nuxt-auth-utils/dist/runtime/server/api/session.delete').default>>>>
+      'get': Simplify<Serialize<Awaited<ReturnType<typeof import('../../node_modules/nuxt-auth-utils/dist/runtime/server/api/session.get').default>>>>
     }
-    '/api/_content/query/:qid': {
-      'get': Simplify<Serialize<Awaited<ReturnType<typeof import('../../node_modules/@nuxt/content/dist/runtime/server/api/query').default>>>>
-    }
-    '/api/_content/query': {
-      'get': Simplify<Serialize<Awaited<ReturnType<typeof import('../../node_modules/@nuxt/content/dist/runtime/server/api/query').default>>>>
-    }
-    '/api/_content/cache.json': {
-      'get': Simplify<Serialize<Awaited<ReturnType<typeof import('../../node_modules/@nuxt/content/dist/runtime/server/api/cache').default>>>>
-    }
-    '/api/_content/navigation/:qid/**:params': {
-      'get': Simplify<Serialize<Awaited<ReturnType<typeof import('../../node_modules/@nuxt/content/dist/runtime/server/api/navigation').default>>>>
-    }
-    '/api/_content/navigation/:qid': {
-      'get': Simplify<Serialize<Awaited<ReturnType<typeof import('../../node_modules/@nuxt/content/dist/runtime/server/api/navigation').default>>>>
-    }
-    '/api/_content/navigation': {
-      'get': Simplify<Serialize<Awaited<ReturnType<typeof import('../../node_modules/@nuxt/content/dist/runtime/server/api/navigation').default>>>>
+    '/api/_nuxt_icon/:collection': {
+      'default': Simplify<Serialize<Awaited<ReturnType<typeof import('../../node_modules/@nuxt/icon/dist/runtime/server/api').default>>>>
     }
   }
 }

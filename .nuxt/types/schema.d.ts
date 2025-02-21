@@ -2,13 +2,25 @@ import { NuxtModule, RuntimeConfig } from '@nuxt/schema'
 declare module '@nuxt/schema' {
   interface NuxtOptions {
     /**
-     * Configuration for `@nuxtjs/mdc`
+     * Configuration for `@nuxtjs/tailwindcss`
      */
-    ["mdc"]: typeof import("@nuxtjs/mdc").default extends NuxtModule<infer O> ? O : Record<string, any>
+    ["tailwindcss"]: typeof import("@nuxtjs/tailwindcss").default extends NuxtModule<infer O> ? O : Record<string, any>
     /**
-     * Configuration for `@nuxt/content`
+     * Configuration for `@nuxtjs/color-mode`
      */
-    ["content"]: typeof import("@nuxt/content").default extends NuxtModule<infer O> ? O : Record<string, any>
+    ["colorMode"]: typeof import("@nuxtjs/color-mode").default extends NuxtModule<infer O> ? O : Record<string, any>
+    /**
+     * Configuration for `shadcn-nuxt`
+     */
+    ["shadcn"]: typeof import("shadcn-nuxt").default extends NuxtModule<infer O> ? O : Record<string, any>
+    /**
+     * Configuration for `nuxt-auth-utils`
+     */
+    ["auth"]: typeof import("nuxt-auth-utils").default extends NuxtModule<infer O> ? O : Record<string, any>
+    /**
+     * Configuration for `@nuxt/icon`
+     */
+    ["icon"]: typeof import("@nuxt/icon").default extends NuxtModule<infer O> ? O : Record<string, any>
     /**
      * Configuration for `@nuxt/devtools`
      */
@@ -20,13 +32,25 @@ declare module '@nuxt/schema' {
   }
   interface NuxtConfig {
     /**
-     * Configuration for `@nuxtjs/mdc`
+     * Configuration for `@nuxtjs/tailwindcss`
      */
-    ["mdc"]?: typeof import("@nuxtjs/mdc").default extends NuxtModule<infer O> ? Partial<O> : Record<string, any>
+    ["tailwindcss"]?: typeof import("@nuxtjs/tailwindcss").default extends NuxtModule<infer O> ? Partial<O> : Record<string, any>
     /**
-     * Configuration for `@nuxt/content`
+     * Configuration for `@nuxtjs/color-mode`
      */
-    ["content"]?: typeof import("@nuxt/content").default extends NuxtModule<infer O> ? Partial<O> : Record<string, any>
+    ["colorMode"]?: typeof import("@nuxtjs/color-mode").default extends NuxtModule<infer O> ? Partial<O> : Record<string, any>
+    /**
+     * Configuration for `shadcn-nuxt`
+     */
+    ["shadcn"]?: typeof import("shadcn-nuxt").default extends NuxtModule<infer O> ? Partial<O> : Record<string, any>
+    /**
+     * Configuration for `nuxt-auth-utils`
+     */
+    ["auth"]?: typeof import("nuxt-auth-utils").default extends NuxtModule<infer O> ? Partial<O> : Record<string, any>
+    /**
+     * Configuration for `@nuxt/icon`
+     */
+    ["icon"]?: typeof import("@nuxt/icon").default extends NuxtModule<infer O> ? Partial<O> : Record<string, any>
     /**
      * Configuration for `@nuxt/devtools`
      */
@@ -35,21 +59,36 @@ declare module '@nuxt/schema' {
      * Configuration for `@nuxt/telemetry`
      */
     ["telemetry"]?: typeof import("@nuxt/telemetry").default extends NuxtModule<infer O> ? Partial<O> : Record<string, any>
-    modules?: (undefined | null | false | NuxtModule<any> | string | [NuxtModule | string, Record<string, any>] | ["@nuxtjs/mdc", Exclude<NuxtConfig["mdc"], boolean>] | ["@nuxt/content", Exclude<NuxtConfig["content"], boolean>] | ["@nuxt/devtools", Exclude<NuxtConfig["devtools"], boolean>] | ["@nuxt/telemetry", Exclude<NuxtConfig["telemetry"], boolean>])[],
+    modules?: (undefined | null | false | NuxtModule<any> | string | [NuxtModule | string, Record<string, any>] | ["@nuxtjs/tailwindcss", Exclude<NuxtConfig["tailwindcss"], boolean>] | ["@nuxtjs/color-mode", Exclude<NuxtConfig["colorMode"], boolean>] | ["shadcn-nuxt", Exclude<NuxtConfig["shadcn"], boolean>] | ["nuxt-auth-utils", Exclude<NuxtConfig["auth"], boolean>] | ["@nuxt/icon", Exclude<NuxtConfig["icon"], boolean>] | ["@nuxt/devtools", Exclude<NuxtConfig["devtools"], boolean>] | ["@nuxt/telemetry", Exclude<NuxtConfig["telemetry"], boolean>])[],
   }
 }
 declare module 'nuxt/schema' {
   interface NuxtOptions {
     /**
-     * Configuration for `@nuxtjs/mdc`
-     * @see https://www.npmjs.com/package/@nuxtjs/mdc
+     * Configuration for `@nuxtjs/tailwindcss`
+     * @see https://www.npmjs.com/package/@nuxtjs/tailwindcss
      */
-    ["mdc"]: typeof import("@nuxtjs/mdc").default extends NuxtModule<infer O> ? O : Record<string, any>
+    ["tailwindcss"]: typeof import("@nuxtjs/tailwindcss").default extends NuxtModule<infer O> ? O : Record<string, any>
     /**
-     * Configuration for `@nuxt/content`
-     * @see https://www.npmjs.com/package/@nuxt/content
+     * Configuration for `@nuxtjs/color-mode`
+     * @see https://www.npmjs.com/package/@nuxtjs/color-mode
      */
-    ["content"]: typeof import("@nuxt/content").default extends NuxtModule<infer O> ? O : Record<string, any>
+    ["colorMode"]: typeof import("@nuxtjs/color-mode").default extends NuxtModule<infer O> ? O : Record<string, any>
+    /**
+     * Configuration for `shadcn-nuxt`
+     * @see https://www.npmjs.com/package/shadcn-nuxt
+     */
+    ["shadcn"]: typeof import("shadcn-nuxt").default extends NuxtModule<infer O> ? O : Record<string, any>
+    /**
+     * Configuration for `nuxt-auth-utils`
+     * @see https://www.npmjs.com/package/nuxt-auth-utils
+     */
+    ["auth"]: typeof import("nuxt-auth-utils").default extends NuxtModule<infer O> ? O : Record<string, any>
+    /**
+     * Configuration for `@nuxt/icon`
+     * @see https://www.npmjs.com/package/@nuxt/icon
+     */
+    ["icon"]: typeof import("@nuxt/icon").default extends NuxtModule<infer O> ? O : Record<string, any>
     /**
      * Configuration for `@nuxt/devtools`
      * @see https://www.npmjs.com/package/@nuxt/devtools
@@ -63,15 +102,30 @@ declare module 'nuxt/schema' {
   }
   interface NuxtConfig {
     /**
-     * Configuration for `@nuxtjs/mdc`
-     * @see https://www.npmjs.com/package/@nuxtjs/mdc
+     * Configuration for `@nuxtjs/tailwindcss`
+     * @see https://www.npmjs.com/package/@nuxtjs/tailwindcss
      */
-    ["mdc"]?: typeof import("@nuxtjs/mdc").default extends NuxtModule<infer O> ? Partial<O> : Record<string, any>
+    ["tailwindcss"]?: typeof import("@nuxtjs/tailwindcss").default extends NuxtModule<infer O> ? Partial<O> : Record<string, any>
     /**
-     * Configuration for `@nuxt/content`
-     * @see https://www.npmjs.com/package/@nuxt/content
+     * Configuration for `@nuxtjs/color-mode`
+     * @see https://www.npmjs.com/package/@nuxtjs/color-mode
      */
-    ["content"]?: typeof import("@nuxt/content").default extends NuxtModule<infer O> ? Partial<O> : Record<string, any>
+    ["colorMode"]?: typeof import("@nuxtjs/color-mode").default extends NuxtModule<infer O> ? Partial<O> : Record<string, any>
+    /**
+     * Configuration for `shadcn-nuxt`
+     * @see https://www.npmjs.com/package/shadcn-nuxt
+     */
+    ["shadcn"]?: typeof import("shadcn-nuxt").default extends NuxtModule<infer O> ? Partial<O> : Record<string, any>
+    /**
+     * Configuration for `nuxt-auth-utils`
+     * @see https://www.npmjs.com/package/nuxt-auth-utils
+     */
+    ["auth"]?: typeof import("nuxt-auth-utils").default extends NuxtModule<infer O> ? Partial<O> : Record<string, any>
+    /**
+     * Configuration for `@nuxt/icon`
+     * @see https://www.npmjs.com/package/@nuxt/icon
+     */
+    ["icon"]?: typeof import("@nuxt/icon").default extends NuxtModule<infer O> ? Partial<O> : Record<string, any>
     /**
      * Configuration for `@nuxt/devtools`
      * @see https://www.npmjs.com/package/@nuxt/devtools
@@ -82,7 +136,7 @@ declare module 'nuxt/schema' {
      * @see https://www.npmjs.com/package/@nuxt/telemetry
      */
     ["telemetry"]?: typeof import("@nuxt/telemetry").default extends NuxtModule<infer O> ? Partial<O> : Record<string, any>
-    modules?: (undefined | null | false | NuxtModule<any> | string | [NuxtModule | string, Record<string, any>] | ["@nuxtjs/mdc", Exclude<NuxtConfig["mdc"], boolean>] | ["@nuxt/content", Exclude<NuxtConfig["content"], boolean>] | ["@nuxt/devtools", Exclude<NuxtConfig["devtools"], boolean>] | ["@nuxt/telemetry", Exclude<NuxtConfig["telemetry"], boolean>])[],
+    modules?: (undefined | null | false | NuxtModule<any> | string | [NuxtModule | string, Record<string, any>] | ["@nuxtjs/tailwindcss", Exclude<NuxtConfig["tailwindcss"], boolean>] | ["@nuxtjs/color-mode", Exclude<NuxtConfig["colorMode"], boolean>] | ["shadcn-nuxt", Exclude<NuxtConfig["shadcn"], boolean>] | ["nuxt-auth-utils", Exclude<NuxtConfig["auth"], boolean>] | ["@nuxt/icon", Exclude<NuxtConfig["icon"], boolean>] | ["@nuxt/devtools", Exclude<NuxtConfig["devtools"], boolean>] | ["@nuxt/telemetry", Exclude<NuxtConfig["telemetry"], boolean>])[],
   }
   interface RuntimeConfig {
    app: {
@@ -99,304 +153,374 @@ declare module 'nuxt/schema' {
       envPrefix: string,
    },
 
-   content: {
-      cacheVersion: number,
+   session: {
+      name: string,
 
-      cacheIntegrity: string,
+      password: string,
 
-      transformers: Array<any>,
+      cookie: {
+         sameSite: string,
+      },
+   },
 
-      base: string,
+   hash: {
+      scrypt: any,
+   },
 
-      api: {
+   webauthn: {
+      register: any,
+
+      authenticate: any,
+   },
+
+   oauth: {
+      gitea: {
+         clientId: string,
+
+         clientSecret: string,
+
+         redirectURL: string,
+
          baseURL: string,
       },
 
-      watch: {
-         ws: {
-            port: {
-               port: number,
+      github: {
+         clientId: string,
 
-               portRange: Array<number>,
-            },
+         clientSecret: string,
 
-            hostname: string,
-
-            showURL: boolean,
-         },
+         redirectURL: string,
       },
 
-      sources: any,
+      gitlab: {
+         clientId: string,
 
-      ignores: Array<any>,
+         clientSecret: string,
 
-      locales: Array<any>,
+         redirectURL: string,
 
-      defaultLocale: any,
-
-      highlight: boolean,
-
-      markdown: {
-         tags: {
-            p: string,
-
-            a: string,
-
-            blockquote: string,
-
-            "code-inline": string,
-
-            code: string,
-
-            em: string,
-
-            h1: string,
-
-            h2: string,
-
-            h3: string,
-
-            h4: string,
-
-            h5: string,
-
-            h6: string,
-
-            hr: string,
-
-            img: string,
-
-            ul: string,
-
-            ol: string,
-
-            li: string,
-
-            strong: string,
-
-            table: string,
-
-            thead: string,
-
-            tbody: string,
-
-            td: string,
-
-            th: string,
-
-            tr: string,
-         },
-
-         anchorLinks: {
-            depth: number,
-
-            exclude: Array<number>,
-         },
-
-         remarkPlugins: any,
-
-         rehypePlugins: any,
+         baseURL: string,
       },
 
-      yaml: any,
+      spotify: {
+         clientId: string,
 
-      csv: {
-         delimeter: string,
+         clientSecret: string,
 
-         json: boolean,
+         redirectURL: string,
       },
 
-      navigation: {
-         fields: Array<any>,
+      google: {
+         clientId: string,
+
+         clientSecret: string,
+
+         redirectURL: string,
       },
 
-      contentHead: boolean,
+      twitch: {
+         clientId: string,
 
-      documentDriven: boolean,
+         clientSecret: string,
 
-      respectPathCase: boolean,
-
-      experimental: {
-         clientDB: boolean,
-
-         cacheContents: boolean,
-
-         stripQueryParameters: boolean,
-
-         advanceQuery: boolean,
-
-         search: any,
+         redirectURL: string,
       },
+
+      auth0: {
+         clientId: string,
+
+         clientSecret: string,
+
+         domain: string,
+
+         audience: string,
+
+         redirectURL: string,
+      },
+
+      workos: {
+         clientId: string,
+
+         clientSecret: string,
+
+         connectionId: string,
+
+         screenHint: string,
+
+         redirectURL: string,
+      },
+
+      microsoft: {
+         clientId: string,
+
+         clientSecret: string,
+
+         tenant: string,
+
+         scope: Array<any>,
+
+         authorizationURL: string,
+
+         tokenURL: string,
+
+         userURL: string,
+
+         redirectURL: string,
+      },
+
+      discord: {
+         clientId: string,
+
+         clientSecret: string,
+
+         redirectURL: string,
+      },
+
+      battledotnet: {
+         clientId: string,
+
+         clientSecret: string,
+
+         redirectURL: string,
+      },
+
+      bluesky: {
+         clientMetadataFilename: string,
+
+         clientName: string,
+
+         clientUri: string,
+
+         logoUri: string,
+
+         policyUri: string,
+
+         tosUri: string,
+
+         scope: Array<string>,
+
+         grantTypes: Array<string>,
+
+         responseTypes: Array<string>,
+
+         applicationType: string,
+
+         redirectUris: Array<any>,
+
+         dpopBoundAccessTokens: boolean,
+
+         tokenEndpointAuthMethod: string,
+      },
+
+      keycloak: {
+         clientId: string,
+
+         clientSecret: string,
+
+         serverUrl: string,
+
+         serverUrlInternal: string,
+
+         realm: string,
+
+         redirectURL: string,
+      },
+
+      linear: {
+         clientId: string,
+
+         clientSecret: string,
+
+         redirectURL: string,
+      },
+
+      linkedin: {
+         clientId: string,
+
+         clientSecret: string,
+
+         redirectURL: string,
+      },
+
+      cognito: {
+         clientId: string,
+
+         clientSecret: string,
+
+         region: string,
+
+         userPoolId: string,
+
+         redirectURL: string,
+      },
+
+      facebook: {
+         clientId: string,
+
+         clientSecret: string,
+
+         redirectURL: string,
+      },
+
+      instagram: {
+         clientId: string,
+
+         clientSecret: string,
+
+         redirectURL: string,
+      },
+
+      paypal: {
+         clientId: string,
+
+         clientSecret: string,
+
+         redirectURL: string,
+      },
+
+      steam: {
+         apiKey: string,
+
+         redirectURL: string,
+      },
+
+      x: {
+         clientId: string,
+
+         clientSecret: string,
+
+         redirectURL: string,
+      },
+
+      xsuaa: {
+         clientId: string,
+
+         clientSecret: string,
+
+         domain: string,
+
+         redirectURL: string,
+      },
+
+      vk: {
+         clientId: string,
+
+         clientSecret: string,
+
+         redirectURL: string,
+      },
+
+      yandex: {
+         clientId: string,
+
+         clientSecret: string,
+
+         redirectURL: string,
+      },
+
+      tiktok: {
+         clientKey: string,
+
+         clientSecret: string,
+
+         redirectURL: string,
+      },
+
+      dropbox: {
+         clientId: string,
+
+         clientSecret: string,
+
+         redirectURL: string,
+      },
+
+      polar: {
+         clientId: string,
+
+         clientSecret: string,
+
+         redirectURL: string,
+      },
+
+      zitadel: {
+         clientId: string,
+
+         clientSecret: string,
+
+         domain: string,
+
+         redirectURL: string,
+      },
+
+      authentik: {
+         clientId: string,
+
+         clientSecret: string,
+
+         domain: string,
+
+         redirectURL: string,
+      },
+
+      seznam: {
+         clientId: string,
+
+         clientSecret: string,
+
+         redirectURL: string,
+      },
+
+      strava: {
+         clientId: string,
+
+         clientSecret: string,
+
+         redirectURL: string,
+      },
+
+      hubspot: {
+         clientId: string,
+
+         clientSecret: string,
+
+         redirectURL: string,
+      },
+
+      line: {
+         clientId: string,
+
+         clientSecret: string,
+
+         redirectURL: string,
+      },
+
+      atlassian: {
+         clientId: string,
+
+         clientSecret: string,
+
+         redirectURL: string,
+      },
+
+      apple: {
+         teamId: string,
+
+         keyId: string,
+
+         privateKey: string,
+
+         redirectURL: string,
+
+         clientId: string,
+      },
+   },
+
+   icon: {
+      serverKnownCssClasses: Array<any>,
    },
   }
   interface PublicRuntimeConfig {
-   mdc: {
-      components: {
-         prose: boolean,
 
-         map: {
-            p: string,
-
-            a: string,
-
-            blockquote: string,
-
-            "code-inline": string,
-
-            code: string,
-
-            em: string,
-
-            h1: string,
-
-            h2: string,
-
-            h3: string,
-
-            h4: string,
-
-            h5: string,
-
-            h6: string,
-
-            hr: string,
-
-            img: string,
-
-            ul: string,
-
-            ol: string,
-
-            li: string,
-
-            strong: string,
-
-            table: string,
-
-            thead: string,
-
-            tbody: string,
-
-            td: string,
-
-            th: string,
-
-            tr: string,
-         },
-      },
-
-      headings: {
-         anchorLinks: {
-            h1: boolean,
-
-            h2: boolean,
-
-            h3: boolean,
-
-            h4: boolean,
-
-            h5: boolean,
-
-            h6: boolean,
-         },
-      },
-   },
-
-   content: {
-      locales: Array<any>,
-
-      defaultLocale: any,
-
-      integrity: any,
-
-      experimental: {
-         stripQueryParameters: boolean,
-
-         advanceQuery: boolean,
-
-         clientDB: boolean,
-      },
-
-      respectPathCase: boolean,
-
-      api: {
-         baseURL: string,
-      },
-
-      navigation: {
-         fields: Array<any>,
-      },
-
-      tags: {
-         p: string,
-
-         a: string,
-
-         blockquote: string,
-
-         "code-inline": string,
-
-         code: string,
-
-         em: string,
-
-         h1: string,
-
-         h2: string,
-
-         h3: string,
-
-         h4: string,
-
-         h5: string,
-
-         h6: string,
-
-         hr: string,
-
-         img: string,
-
-         ul: string,
-
-         ol: string,
-
-         li: string,
-
-         strong: string,
-
-         table: string,
-
-         thead: string,
-
-         tbody: string,
-
-         td: string,
-
-         th: string,
-
-         tr: string,
-      },
-
-      highlight: boolean,
-
-      wsUrl: string,
-
-      documentDriven: boolean,
-
-      host: string,
-
-      trailingSlash: boolean,
-
-      search: any,
-
-      contentHead: boolean,
-
-      anchorLinks: {
-         depth: number,
-
-         exclude: Array<number>,
-      },
-   },
   }
 }
 declare module 'vue' {

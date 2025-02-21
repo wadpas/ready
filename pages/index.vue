@@ -1,24 +1,23 @@
-<script setup lang="ts">
-const counter = useState('counter', () => Math.round(Math.random() * 1000))
-const color = useColor()
-const { data: books, status } = await useLazyFetch('/api/books', {})
-
-definePageMeta({
-  layout: 'custom',
-  middleware: 'auth',
-})
-</script>
-
 <template>
   <div>Main</div>
-  <ContentDoc />
-  <div>
-    Counter: {{ counter }}
-    <button @click="counter++">+</button>
-    <button @click="counter--">-</button>
-  </div>
-  <div>{{ color }}</div>
-  <div>{{ status === 'pending' ? 'Loading...' : books }}</div>
+  <pre>{{ user }}</pre>
+  <NuxtLink to="/auth/login">Login</NuxtLink>
+  <NuxtLink to="/auth/register">Register</NuxtLink>
+  <NuxtLink to="/admin">Admin</NuxtLink>
+
+  <Button @click="logout">Logout</Button>
 </template>
+
+<script setup lang="ts">
+  definePageMeta({
+    middleware: ['auth'],
+  })
+  const { user, clear } = useUserSession()
+
+  const logout = async () => {
+    await clear()
+    navigateTo('/auth/login')
+  }
+</script>
 
 <style scoped></style>
