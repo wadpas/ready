@@ -1,4 +1,4 @@
-import { authSchema } from '~/server/utils/validations'
+import { authSchema } from '~/utils/validations'
 import db from '~/utils/db'
 
 export default defineEventHandler(async (event) => {

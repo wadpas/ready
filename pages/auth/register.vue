@@ -1,4 +1,6 @@
 <script setup lang="ts">
+  const { loggedIn, user, fetch: refreshSession } = useUserSession()
+
   type Payload = {
     email: string
     password: string
@@ -9,16 +11,25 @@
     password: '',
   })
 
+  const { isLoading, appError, toggleLoading, toggleError, showError, showMessage } = useStore()
   const onSubmit = async () => {
     try {
-      const res = await $fetch('/api/auth/register', {
+      toggleLoading(true)
+      await $fetch('/api/auth/register', {
         method: 'POST',
         body: form.value,
       })
-      console.log(res)
+      showMessage({
+        title: 'Вітаємо!',
+      })
+      await refreshSession()
+      await navigateTo('/')
       navigateTo('/')
     } catch (error) {
-      console.log(error)
+      const err = handleError(error)
+      showError(err)
+    } finally {
+      toggleLoading(false)
     }
   }
 </script>

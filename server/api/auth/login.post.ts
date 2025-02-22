@@ -1,4 +1,4 @@
-import { authSchema } from '~/server/utils/validations'
+import { authSchema } from '~/utils/validations'
 import db from '~/utils/db'
 
 export default defineEventHandler(async (event) => {
@@ -12,8 +12,8 @@ export default defineEventHandler(async (event) => {
 
   if (!currentUser) {
     throw createError({
-      statusCode: 401,
-      statusMessage: 'Invalid credential',
+      statusCode: 402,
+      statusMessage: 'Invalid2 credential',
     })
   }
 

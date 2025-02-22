@@ -1505,11 +1505,6 @@ const sanitizeUser = (user) => {
   return user;
 };
 
-const authSchema = z.object({
-  email: z.string().email(),
-  password: z.string().min(8)
-});
-
 const sessionHooks = createHooks();
 async function getUserSession(event) {
   const session = await _useSession(event);
@@ -1879,6 +1874,11 @@ const github_get$1 = /*#__PURE__*/Object.freeze({
   default: github_get
 });
 
+const authSchema = z.object({
+  email: z.string().email(),
+  password: z.string().min(8)
+});
+
 const login_post = defineEventHandler(async (event) => {
   const { email, password } = await readValidatedBody(event, (body) => authSchema.parse(body));
   let currentUser = await db.user.findUnique({
@@ -1888,8 +1888,8 @@ const login_post = defineEventHandler(async (event) => {
   });
   if (!currentUser) {
     throw createError({
-      statusCode: 401,
-      statusMessage: "Invalid credential"
+      statusCode: 402,
+      statusMessage: "Invalid2 credential"
     });
   }
   if (!currentUser.password) {

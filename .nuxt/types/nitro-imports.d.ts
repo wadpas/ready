@@ -8,7 +8,6 @@ declare global {
   const appendResponseHeader: typeof import('../../node_modules/h3')['appendResponseHeader']
   const appendResponseHeaders: typeof import('../../node_modules/h3')['appendResponseHeaders']
   const assertMethod: typeof import('../../node_modules/h3')['assertMethod']
-  const authSchema: typeof import('../../server/utils/validations')['authSchema']
   const cachedEventHandler: typeof import('../../node_modules/nitropack/dist/runtime/internal/cache')['cachedEventHandler']
   const cachedFunction: typeof import('../../node_modules/nitropack/dist/runtime/internal/cache')['cachedFunction']
   const callNodeListener: typeof import('../../node_modules/h3')['callNodeListener']
@@ -330,4 +329,3 @@ export { getAtprotoClientMetadata } from '../../node_modules/nuxt-auth-utils/dis
 export { hashPassword, verifyPassword } from '../../node_modules/nuxt-auth-utils/dist/runtime/server/utils/password';
 export { sessionHooks, getUserSession, setUserSession, replaceUserSession, clearUserSession, requireUserSession } from '../../node_modules/nuxt-auth-utils/dist/runtime/server/utils/session';
 export { sanitizeUser } from '../../server/utils/auth';
-export { authSchema } from '../../server/utils/validations';

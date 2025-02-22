@@ -1,4 +1,6 @@
 <script setup lang="ts">
+  const { loggedIn, user, fetch: refreshSession } = useUserSession()
+
   type Payload = {
     email: string
     password: string
@@ -9,16 +11,25 @@
     password: '',
   })
 
+  const { isLoading, appError, toggleLoading, toggleError, showError, showMessage } = useStore()
   const onSubmit = async () => {
     try {
-      const res = await $fetch('/api/auth/login', {
+      toggleLoading(true)
+      await $fetch('/api/auth/login', {
         method: 'POST',
         body: form.value,
       })
-      console.log(res)
+      showMessage({
+        title: 'Вітаємо!',
+      })
+      await refreshSession()
+      await navigateTo('/')
       navigateTo('/')
     } catch (error) {
-      console.log(error)
+      const err = handleError(error)
+      showError(err)
+    } finally {
+      toggleLoading(false)
     }
   }
 </script>
@@ -31,6 +42,7 @@
           <CardHeader>
             <CardTitle class="text-2xl">Вхід</CardTitle>
             <CardDescription>Введіть інформацію для входу в акаунту</CardDescription>
+            <p>test@test.test</p>
           </CardHeader>
           <CardContent class="grid gap-4">
             <div class="grid gap-2">
@@ -59,6 +71,7 @@
           </CardContent>
           <CardFooter class="flex flex-col gap-2">
             <Button
+              :disabled="isLoading"
               class="w-full"
               type="submit">
               Увійти
