@@ -12,6 +12,12 @@ declare module "nitropack/types" {
     '/api/auth/register': {
       'post': Simplify<Serialize<Awaited<ReturnType<typeof import('../../server/api/auth/register.post').default>>>>
     }
+    '/api/genres/genreId': {
+      'get': Simplify<Serialize<Awaited<ReturnType<typeof import('../../server/api/genres/genreId/index.get').default>>>>
+    }
+    '/api/genres': {
+      'get': Simplify<Serialize<Awaited<ReturnType<typeof import('../../server/api/genres/index.get').default>>>>
+    }
     '/__nuxt_error': {
       'default': Simplify<Serialize<Awaited<ReturnType<typeof import('../../node_modules/nuxt/dist/core/runtime/nitro/renderer').default>>>>
     }

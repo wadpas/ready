@@ -1,5 +1,5 @@
 <script setup lang="ts">
-  const { loggedIn, user, fetch: refreshSession } = useUserSession()
+  const { fetch: refreshSession } = useUserSession()
 
   type Payload = {
     email: string
@@ -11,7 +11,7 @@
     password: '',
   })
 
-  const { isLoading, appError, toggleLoading, toggleError, showError, showMessage } = useStore()
+  const { isLoading, toggleLoading, showError, showMessage } = useStore()
   const onSubmit = async () => {
     try {
       toggleLoading(true)

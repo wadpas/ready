@@ -4,3 +4,8 @@ export type APIError = {
   message: string
   data?: Record<string, string>
 }
+
+export type RouteParams = {
+  genreId: string
+  bookId: string
+}

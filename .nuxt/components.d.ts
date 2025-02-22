@@ -2,7 +2,10 @@
 import type { DefineComponent, SlotsType } from 'vue'
 type IslandComponent<T extends DefineComponent> = T & DefineComponent<{}, {refresh: () => Promise<void>}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, SlotsType<{ fallback: { error: unknown } }>>
 interface _GlobalComponents {
-      'AuthSocialButton': typeof import("../components/Auth/SocialButton.vue")['default']
+      'AdminGenreClient': typeof import("../components/Admin/Genre/Client.vue")['default']
+    'AdminGenreForm': typeof import("../components/Admin/Genre/Form.vue")['default']
+    'AuthSocialButton': typeof import("../components/Auth/SocialButton.vue")['default']
+    'Heading': typeof import("../components/Heading.vue")['default']
     'AuthState': typeof import("../node_modules/nuxt-auth-utils/dist/runtime/app/components/AuthState.vue")['default']
     'NuxtWelcome': typeof import("../node_modules/nuxt/dist/app/components/welcome.vue")['default']
     'NuxtLayout': typeof import("../node_modules/nuxt/dist/app/components/nuxt-layout")['default']
@@ -34,6 +37,7 @@ interface _GlobalComponents {
     'Form': typeof import("../components/ui/form/index")['Form']
     'Input': typeof import("../components/ui/input/index")['Input']
     'Label': typeof import("../components/ui/label/index")['Label']
+    'Separator': typeof import("../components/ui/separator/index")['Separator']
     'Toast': typeof import("../components/ui/toast/index")['Toast']
     'ToastAction': typeof import("../components/ui/toast/index")['ToastAction']
     'ToastClose': typeof import("../components/ui/toast/index")['ToastClose']
@@ -55,7 +59,10 @@ interface _GlobalComponents {
     'Body': typeof import("../node_modules/nuxt/dist/head/runtime/components")['Body']
     'NuxtIsland': typeof import("../node_modules/nuxt/dist/app/components/nuxt-island")['default']
     'NuxtRouteAnnouncer': IslandComponent<typeof import("../node_modules/nuxt/dist/app/components/server-placeholder")['default']>
-      'LazyAuthSocialButton': typeof import("../components/Auth/SocialButton.vue")['default']
+      'LazyAdminGenreClient': typeof import("../components/Admin/Genre/Client.vue")['default']
+    'LazyAdminGenreForm': typeof import("../components/Admin/Genre/Form.vue")['default']
+    'LazyAuthSocialButton': typeof import("../components/Auth/SocialButton.vue")['default']
+    'LazyHeading': typeof import("../components/Heading.vue")['default']
     'LazyAuthState': typeof import("../node_modules/nuxt-auth-utils/dist/runtime/app/components/AuthState.vue")['default']
     'LazyNuxtWelcome': typeof import("../node_modules/nuxt/dist/app/components/welcome.vue")['default']
     'LazyNuxtLayout': typeof import("../node_modules/nuxt/dist/app/components/nuxt-layout")['default']
@@ -87,6 +94,7 @@ interface _GlobalComponents {
     'LazyForm': typeof import("../components/ui/form/index")['Form']
     'LazyInput': typeof import("../components/ui/input/index")['Input']
     'LazyLabel': typeof import("../components/ui/label/index")['Label']
+    'LazySeparator': typeof import("../components/ui/separator/index")['Separator']
     'LazyToast': typeof import("../components/ui/toast/index")['Toast']
     'LazyToastAction': typeof import("../components/ui/toast/index")['ToastAction']
     'LazyToastClose': typeof import("../components/ui/toast/index")['ToastClose']
@@ -114,7 +122,10 @@ declare module 'vue' {
   export interface GlobalComponents extends _GlobalComponents { }
 }
 
+export const AdminGenreClient: typeof import("../components/Admin/Genre/Client.vue")['default']
+export const AdminGenreForm: typeof import("../components/Admin/Genre/Form.vue")['default']
 export const AuthSocialButton: typeof import("../components/Auth/SocialButton.vue")['default']
+export const Heading: typeof import("../components/Heading.vue")['default']
 export const AuthState: typeof import("../node_modules/nuxt-auth-utils/dist/runtime/app/components/AuthState.vue")['default']
 export const NuxtWelcome: typeof import("../node_modules/nuxt/dist/app/components/welcome.vue")['default']
 export const NuxtLayout: typeof import("../node_modules/nuxt/dist/app/components/nuxt-layout")['default']
@@ -146,6 +157,7 @@ export const FormFieldArray: typeof import("../components/ui/form/index")['FormF
 export const Form: typeof import("../components/ui/form/index")['Form']
 export const Input: typeof import("../components/ui/input/index")['Input']
 export const Label: typeof import("../components/ui/label/index")['Label']
+export const Separator: typeof import("../components/ui/separator/index")['Separator']
 export const Toast: typeof import("../components/ui/toast/index")['Toast']
 export const ToastAction: typeof import("../components/ui/toast/index")['ToastAction']
 export const ToastClose: typeof import("../components/ui/toast/index")['ToastClose']
@@ -167,7 +179,10 @@ export const Html: typeof import("../node_modules/nuxt/dist/head/runtime/compone
 export const Body: typeof import("../node_modules/nuxt/dist/head/runtime/components")['Body']
 export const NuxtIsland: typeof import("../node_modules/nuxt/dist/app/components/nuxt-island")['default']
 export const NuxtRouteAnnouncer: IslandComponent<typeof import("../node_modules/nuxt/dist/app/components/server-placeholder")['default']>
+export const LazyAdminGenreClient: typeof import("../components/Admin/Genre/Client.vue")['default']
+export const LazyAdminGenreForm: typeof import("../components/Admin/Genre/Form.vue")['default']
 export const LazyAuthSocialButton: typeof import("../components/Auth/SocialButton.vue")['default']
+export const LazyHeading: typeof import("../components/Heading.vue")['default']
 export const LazyAuthState: typeof import("../node_modules/nuxt-auth-utils/dist/runtime/app/components/AuthState.vue")['default']
 export const LazyNuxtWelcome: typeof import("../node_modules/nuxt/dist/app/components/welcome.vue")['default']
 export const LazyNuxtLayout: typeof import("../node_modules/nuxt/dist/app/components/nuxt-layout")['default']
@@ -199,6 +214,7 @@ export const LazyFormFieldArray: typeof import("../components/ui/form/index")['F
 export const LazyForm: typeof import("../components/ui/form/index")['Form']
 export const LazyInput: typeof import("../components/ui/input/index")['Input']
 export const LazyLabel: typeof import("../components/ui/label/index")['Label']
+export const LazySeparator: typeof import("../components/ui/separator/index")['Separator']
 export const LazyToast: typeof import("../components/ui/toast/index")['Toast']
 export const LazyToastAction: typeof import("../components/ui/toast/index")['ToastAction']
 export const LazyToastClose: typeof import("../components/ui/toast/index")['ToastClose']

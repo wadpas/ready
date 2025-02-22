@@ -29,6 +29,8 @@ model User {
   genres        Genre[]
   authors       Author[]
   covers        Cover[]
+
+  @@map("users")
 }
 
 model OAuthAccount {

@@ -1612,12 +1612,16 @@ const _6vegE0 = defineCachedEventHandler(async (event) => {
 const _lazy_Ej1chm = () => Promise.resolve().then(function () { return github_get$1; });
 const _lazy_EwjYhE = () => Promise.resolve().then(function () { return login_post$1; });
 const _lazy_51VOrk = () => Promise.resolve().then(function () { return register_post$1; });
+const _lazy_Zfvq3a = () => Promise.resolve().then(function () { return index_get$2; });
+const _lazy_FgRSH3 = () => Promise.resolve().then(function () { return index_get; });
 const _lazy_Sgl683 = () => Promise.resolve().then(function () { return renderer$1; });
 
 const handlers = [
   { route: '/api/auth/github', handler: _lazy_Ej1chm, lazy: true, middleware: false, method: "get" },
   { route: '/api/auth/login', handler: _lazy_EwjYhE, lazy: true, middleware: false, method: "post" },
   { route: '/api/auth/register', handler: _lazy_51VOrk, lazy: true, middleware: false, method: "post" },
+  { route: '/api/genres/genreId', handler: _lazy_Zfvq3a, lazy: true, middleware: false, method: "get" },
+  { route: '/api/genres', handler: _lazy_FgRSH3, lazy: true, middleware: false, method: "get" },
   { route: '/__nuxt_error', handler: _lazy_Sgl683, lazy: true, middleware: false, method: undefined },
   { route: '/api/_auth/session', handler: _56IsM9, lazy: false, middleware: false, method: "delete" },
   { route: '/api/_auth/session', handler: _D49Rar, lazy: false, middleware: false, method: "get" },
@@ -1878,6 +1882,9 @@ const authSchema = z.object({
   email: z.string().email(),
   password: z.string().min(8)
 });
+z.object({
+  name: z.string().min(1)
+});
 
 const login_post = defineEventHandler(async (event) => {
   const { email, password } = await readValidatedBody(event, (body) => authSchema.parse(body));
@@ -1958,6 +1965,19 @@ const register_post = defineEventHandler(async (event) => {
 const register_post$1 = /*#__PURE__*/Object.freeze({
   __proto__: null,
   default: register_post
+});
+
+const index_get$1 = defineEventHandler(async (event) => {
+  return null;
+});
+
+const index_get$2 = /*#__PURE__*/Object.freeze({
+  __proto__: null,
+  default: index_get$1
+});
+
+const index_get = /*#__PURE__*/Object.freeze({
+  __proto__: null
 });
 
 const Vue3 = version[0] === "3";

@@ -31,7 +31,7 @@ export { injectHead, useHead, useSeoMeta, useHeadSafe, useServerHead, useServerS
 export { default as useStore } from '../composables/useStore';
 export { default as db } from '../utils/db';
 export { handleError } from '../utils/error';
-export { authSchema } from '../utils/validations';
+export { authSchema, genreSchema } from '../utils/validations';
 export { useColorMode } from '../node_modules/@nuxtjs/color-mode/dist/runtime/composables';
 export { useUserSession } from '../node_modules/nuxt-auth-utils/dist/runtime/app/composables/session';
 export { useNuxtDevTools } from '../node_modules/@nuxt/devtools/dist/runtime/use-nuxt-devtools';
