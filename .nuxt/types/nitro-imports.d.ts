@@ -8,6 +8,7 @@ declare global {
   const appendResponseHeader: typeof import('../../node_modules/h3')['appendResponseHeader']
   const appendResponseHeaders: typeof import('../../node_modules/h3')['appendResponseHeaders']
   const assertMethod: typeof import('../../node_modules/h3')['assertMethod']
+  const authSchema: typeof import('../../server/utils/validations')['authSchema']
   const cachedEventHandler: typeof import('../../node_modules/nitropack/dist/runtime/internal/cache')['cachedEventHandler']
   const cachedFunction: typeof import('../../node_modules/nitropack/dist/runtime/internal/cache')['cachedFunction']
   const callNodeListener: typeof import('../../node_modules/h3')['callNodeListener']
@@ -20,6 +21,7 @@ declare global {
   const createEvent: typeof import('../../node_modules/h3')['createEvent']
   const createEventStream: typeof import('../../node_modules/h3')['createEventStream']
   const createRouter: typeof import('../../node_modules/h3')['createRouter']
+  const db: typeof import('../../server/utils/db')['default']
   const defaultContentType: typeof import('../../node_modules/h3')['defaultContentType']
   const defineAppConfig: typeof import('../../node_modules/nuxt/dist/core/runtime/nitro/config')['defineAppConfig']
   const defineCachedEventHandler: typeof import('../../node_modules/nitropack/dist/runtime/internal/cache')['defineCachedEventHandler']
@@ -78,6 +80,7 @@ declare global {
   const fromNodeMiddleware: typeof import('../../node_modules/h3')['fromNodeMiddleware']
   const fromPlainHandler: typeof import('../../node_modules/h3')['fromPlainHandler']
   const fromWebHandler: typeof import('../../node_modules/h3')['fromWebHandler']
+  const genreSchema: typeof import('../../server/utils/validations')['genreSchema']
   const getAtprotoClientMetadata: typeof import('../../node_modules/nuxt-auth-utils/dist/runtime/server/utils/atproto')['getAtprotoClientMetadata']
   const getCookie: typeof import('../../node_modules/h3')['getCookie']
   const getHeader: typeof import('../../node_modules/h3')['getHeader']
@@ -107,6 +110,7 @@ declare global {
   const getValidatedRouterParams: typeof import('../../node_modules/h3')['getValidatedRouterParams']
   const handleCacheHeaders: typeof import('../../node_modules/h3')['handleCacheHeaders']
   const handleCors: typeof import('../../node_modules/h3')['handleCors']
+  const handleError: typeof import('../../server/utils/error')['handleError']
   const hashPassword: typeof import('../../node_modules/nuxt-auth-utils/dist/runtime/server/utils/password')['hashPassword']
   const isCorsOriginAllowed: typeof import('../../node_modules/h3')['isCorsOriginAllowed']
   const isError: typeof import('../../node_modules/h3')['isError']
@@ -329,3 +333,6 @@ export { getAtprotoClientMetadata } from '../../node_modules/nuxt-auth-utils/dis
 export { hashPassword, verifyPassword } from '../../node_modules/nuxt-auth-utils/dist/runtime/server/utils/password';
 export { sessionHooks, getUserSession, setUserSession, replaceUserSession, clearUserSession, requireUserSession } from '../../node_modules/nuxt-auth-utils/dist/runtime/server/utils/session';
 export { sanitizeUser } from '../../server/utils/auth';
+export { default as db } from '../../server/utils/db';
+export { handleError } from '../../server/utils/error';
+export { authSchema, genreSchema } from '../../server/utils/validations';

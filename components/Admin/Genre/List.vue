@@ -8,13 +8,16 @@
           <Icon
             size="20"
             name="radix-icons:plus" />
-          Додати
+          Створити
         </Button>
       </NuxtLink>
     </Heading>
+    {{ currentGenres }}
   </div>
 </template>
 
-<script setup lang="ts"></script>
+<script setup lang="ts">
+  const { data: currentGenres } = await useFetch(`/api/genres`)
+</script>
 
 <style lang="scss" scoped></style>

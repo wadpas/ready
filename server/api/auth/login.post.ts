@@ -1,5 +1,5 @@
-import { authSchema } from '~/utils/validations'
-import db from '~/utils/db'
+import { authSchema } from '~/server/utils/validations'
+import db from '~/server/utils/db'
 
 export default defineEventHandler(async (event) => {
   const { email, password } = await readValidatedBody(event, (body) => authSchema.parse(body))
@@ -13,7 +13,7 @@ export default defineEventHandler(async (event) => {
   if (!currentUser) {
     throw createError({
       statusCode: 402,
-      statusMessage: 'Invalid2 credential',
+      statusMessage: 'Невірні облікові дані',
     })
   }
 
@@ -37,7 +37,7 @@ export default defineEventHandler(async (event) => {
     if (!isPasswordCorrect) {
       throw createError({
         statusCode: 401,
-        statusMessage: 'Invalid credential',
+        statusMessage: 'Невірні облікові дані',
       })
     }
   }

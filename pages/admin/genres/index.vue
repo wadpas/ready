@@ -1,7 +1,7 @@
 <template>
   <div class="flex-col">
     <div class="flex-col p-8 pt-6 space-y-4">
-      <AdminGenreClient></AdminGenreClient>
+      <AdminGenreList></AdminGenreList>
     </div>
   </div>
 </template>

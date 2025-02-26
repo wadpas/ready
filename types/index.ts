@@ -8,4 +8,5 @@ export type APIError = {
 export type RouteParams = {
   genreId: string
   bookId: string
+  slug: string
 }

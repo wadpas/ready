@@ -43,34 +43,42 @@ model OAuthAccount {
   user           User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@unique([providerId, providerUserId])
+  @@map("oAuthAccounts")
 }
 
 model Genre {
   id        String   @id @default(auto()) @map("_id") @db.ObjectId
   name      String
-  books     Book[]
-  userId    String   @db.ObjectId
-  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  slug      String
+  createdBy String   @db.ObjectId
+  user      User     @relation(fields: [createdBy], references: [id], onDelete: Cascade)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+  bookId    String?  @db.ObjectId
+  book      Book?    @relation(fields: [bookId], references: [id])
+
+  @@unique([slug])
+  @@map("genres")
 }
 
 model Book {
-  id         String      @id @default(auto()) @map("_id") @db.ObjectId
+  id         String   @id @default(auto()) @map("_id") @db.ObjectId
   title      String
-  price      Float       @default(199)
+  price      Float    @default(199)
   covers     Cover[]
-  orderItems OrderItem[]
-  genreId    String      @db.ObjectId
-  genre      Genre       @relation(fields: [genreId], references: [id])
-  authorIds  String[]    @db.ObjectId
-  author     Author[]    @relation(fields: [authorIds], references: [id])
-  isFeatured Boolean     @default(false)
-  userId     String      @db.ObjectId
-  user       User        @relation(fields: [userId], references: [id], onDelete: Cascade)
-  isActive   Boolean     @default(false)
-  createdAt  DateTime    @default(now())
-  updatedAt  DateTime    @updatedAt
+  genre      Genre[]
+  author     Author[] @relation(fields: [authorIds], references: [id])
+  authorIds  String[] @db.ObjectId
+  isFeatured Boolean  @default(false)
+  isActive   Boolean  @default(false)
+  createdBy  User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId     String   @db.ObjectId
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+  orders     Order[]  @relation(fields: [orderIds], references: [id])
+  orderIds   String[] @db.ObjectId
+
+  @@map("books")
 }
 
 model Author {
@@ -82,35 +90,34 @@ model Author {
   user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+
+  @@map("authors")
 }
 
 model Cover {
   id        String   @id @default(auto()) @map("_id") @db.ObjectId
   coverUrl  String
-  bookId    String   @db.ObjectId
-  book      Book     @relation(fields: [bookId], references: [id], onDelete: Cascade)
   userId    String   @db.ObjectId
   user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+  book      Book?    @relation(fields: [bookId], references: [id])
+  bookId    String?  @db.ObjectId
+
+  @@map("covers")
 }
 
 model Order {
-  id         String      @id @default(auto()) @map("_id") @db.ObjectId
-  orderItems OrderItem[]
-  isPaid     Boolean     @default(false)
-  phone      String      @default("")
-  address    String      @default("")
-  User       User?       @relation(fields: [userId], references: [id])
-  userId     String?     @db.ObjectId
-  createdAt  DateTime    @default(now())
-  updatedAt  DateTime    @updatedAt
-}
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  booksIds  String[] @db.ObjectId
+  books     Book[]   @relation(fields: [booksIds], references: [id])
+  isPaid    Boolean  @default(false)
+  phone     String   @default("")
+  address   String   @default("")
+  User      User?    @relation(fields: [userId], references: [id])
+  userId    String?  @db.ObjectId
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
-model OrderItem {
-  id      String @id @default(auto()) @map("_id") @db.ObjectId
-  orderId String @db.ObjectId
-  order   Order  @relation(fields: [orderId], references: [id])
-  bookId  String @db.ObjectId
-  book    Book   @relation(fields: [bookId], references: [id])
+  @@map("orders")
 }

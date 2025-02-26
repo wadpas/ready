@@ -2,10 +2,11 @@
   <div>
     <div class="flex items-center justify-between">
       <Heading
-        :title="title"
-        :description="description">
+        title="Жанр"
+        description="Введіть інформацію для створення/редагування жанру">
         <Button
           v-if="isEditing"
+          @click="toggleModal(true)"
           variant="destructive">
           <Icon
             size="20"
@@ -39,25 +40,34 @@
         :disable="isLoading"
         class="ml-auto"
         type="submit">
-        {{ action }}
+        Зберегти
       </Button>
     </form>
   </div>
+  <AlertModal
+    v-if="isModalVisible"
+    @on-confirm="deleteGenre"></AlertModal>
 </template>
 
 <script setup lang="ts">
-  import type { RouteParams } from '~/types'
+  import type { APIError, RouteParams } from '~/types'
   import { toTypedSchema } from '@vee-validate/zod'
   import { useForm } from 'vee-validate'
+  import { genreSchema } from '~/server/utils/validations'
 
-  const { isLoading, appError, toggleLoading, toggleError, showError, showMessage } = useStore()
+  const { isLoading, isModalVisible, toggleLoading, toggleModal, showError, showMessage, toggleError } = useStore()
   const isEditing = ref(true)
-  const title = ref('Жанр')
-  const description = ref('Редагування')
-  const action = ref('Зберегти')
 
   const route = useRoute()
-  const { data: currentGenre } = await useFetch(`/api/genres/${(route.params as RouteParams).genreId}`)
+  const { data: currentGenre } = await useFetch(`/api/genres/${(route.params as RouteParams).slug}`)
+
+  watchEffect(() => {
+    if (route.params.slug === 'new') {
+      isEditing.value = false
+    } else if (!currentGenre.value) {
+      navigateTo('/admin/genres')
+    }
+  })
 
   const formSchema = toTypedSchema(genreSchema)
   const form = useForm({
@@ -69,22 +79,48 @@
     try {
       toggleLoading(true)
       if (isEditing.value) {
-        console.log('Edit', values)
+        $fetch(`/api/genres/${(route.params as RouteParams).slug}`, {
+          method: 'PATCH',
+          body: values,
+        })
       } else {
-        console.log('Create', values)
+        const data = await $fetch('/api/genres', {
+          method: 'POST',
+          body: values,
+        })
       }
       showMessage({
-        title: title.value,
-        description: description.value + 'успішне',
+        title: 'Операція успішна',
+        description: 'Всі дані були успішно збережені',
+      })
+      await navigateTo('/admin/genres')
+    } catch (error) {
+      console.log(error)
+      const err = toggleError(error as APIError)
+      showError(err)
+    } finally {
+      toggleLoading(false)
+    }
+  })
+
+  const deleteGenre = async () => {
+    try {
+      toggleLoading(true)
+      $fetch(`/api/genres/${(route.params as RouteParams).slug}`, {
+        method: 'DELETE',
+      })
+      showMessage({
+        title: 'Операція успішна',
+        description: 'Всі дані були успішно видалені',
       })
       navigateTo('/admin/genres')
     } catch (error) {
       const err = handleError(error)
       showError(err)
     } finally {
+      toggleLoading(false)
     }
-  })
+  }
 </script>
 
 <style lang="scss" scoped></style>
-s

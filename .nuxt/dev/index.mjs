@@ -10,8 +10,9 @@ import { FetchError, createFetch as createFetch$1, Headers as Headers$1 } from '
 import { snakeCase, upperFirst } from 'file://C:/Users/Wad/Desktop/apps/books-nuxt/node_modules/scule/dist/index.mjs';
 import { Hash } from 'file://C:/Users/Wad/Desktop/apps/books-nuxt/node_modules/@adonisjs/hash/build/index.js';
 import { Scrypt } from 'file://C:/Users/Wad/Desktop/apps/books-nuxt/node_modules/@adonisjs/hash/build/src/drivers/scrypt.js';
-import { z } from 'file://C:/Users/Wad/Desktop/apps/books-nuxt/node_modules/zod/lib/index.mjs';
+import CyrillicToTranslit from 'file://C:/Users/Wad/Desktop/apps/books-nuxt/node_modules/cyrillic-to-translit-js/CyrillicToTranslit.js';
 import { PrismaClient } from 'file://C:/Users/Wad/Desktop/apps/books-nuxt/node_modules/@prisma/client/default.js';
+import { z } from 'file://C:/Users/Wad/Desktop/apps/books-nuxt/node_modules/zod/lib/index.mjs';
 import { getRequestDependencies, getPreloadLinks, getPrefetchLinks, createRenderer } from 'file://C:/Users/Wad/Desktop/apps/books-nuxt/node_modules/vue-bundle-renderer/dist/runtime.mjs';
 import { stringify, uneval } from 'file://C:/Users/Wad/Desktop/apps/books-nuxt/node_modules/devalue/index.js';
 import destr from 'file://C:/Users/Wad/Desktop/apps/books-nuxt/node_modules/destr/dist/index.mjs';
@@ -1505,6 +1506,16 @@ const sanitizeUser = (user) => {
   return user;
 };
 
+const db = globalThis.prisma || new PrismaClient();
+
+const authSchema = z.object({
+  email: z.string().email(),
+  password: z.string().min(8)
+});
+const genreSchema = z.object({
+  name: z.string().min(1)
+});
+
 const sessionHooks = createHooks();
 async function getUserSession(event) {
   const session = await _useSession(event);
@@ -1523,6 +1534,22 @@ async function clearUserSession(event, config) {
   await sessionHooks.callHookParallel("clear", session.data, event);
   await session.clear();
   return true;
+}
+async function requireUserSession(event, opts = {}) {
+  const userSession = await getUserSession(event);
+  if (!userSession.user) {
+    if (isEvent(event)) {
+      throw createError({
+        statusCode: opts.statusCode || 401,
+        message: opts.message || "Unauthorized"
+      });
+    } else {
+      throw new Response(opts.message || "Unauthorized", {
+        status: opts.statusCode || 401
+      });
+    }
+  }
+  return userSession;
 }
 let sessionConfig;
 function _useSession(event, config = {}) {
@@ -1612,16 +1639,22 @@ const _6vegE0 = defineCachedEventHandler(async (event) => {
 const _lazy_Ej1chm = () => Promise.resolve().then(function () { return github_get$1; });
 const _lazy_EwjYhE = () => Promise.resolve().then(function () { return login_post$1; });
 const _lazy_51VOrk = () => Promise.resolve().then(function () { return register_post$1; });
-const _lazy_Zfvq3a = () => Promise.resolve().then(function () { return index_get$2; });
-const _lazy_FgRSH3 = () => Promise.resolve().then(function () { return index_get; });
+const _lazy_XQ0Dpm = () => Promise.resolve().then(function () { return index_delete$1; });
+const _lazy_TtDnFc = () => Promise.resolve().then(function () { return index_get$3; });
+const _lazy_jVNdCP = () => Promise.resolve().then(function () { return index_patch$1; });
+const _lazy_FgRSH3 = () => Promise.resolve().then(function () { return index_get$1; });
+const _lazy_FkEbU9 = () => Promise.resolve().then(function () { return index_post$1; });
 const _lazy_Sgl683 = () => Promise.resolve().then(function () { return renderer$1; });
 
 const handlers = [
   { route: '/api/auth/github', handler: _lazy_Ej1chm, lazy: true, middleware: false, method: "get" },
   { route: '/api/auth/login', handler: _lazy_EwjYhE, lazy: true, middleware: false, method: "post" },
   { route: '/api/auth/register', handler: _lazy_51VOrk, lazy: true, middleware: false, method: "post" },
-  { route: '/api/genres/genreId', handler: _lazy_Zfvq3a, lazy: true, middleware: false, method: "get" },
+  { route: '/api/genres/:slug', handler: _lazy_XQ0Dpm, lazy: true, middleware: false, method: "delete" },
+  { route: '/api/genres/:slug', handler: _lazy_TtDnFc, lazy: true, middleware: false, method: "get" },
+  { route: '/api/genres/:slug', handler: _lazy_jVNdCP, lazy: true, middleware: false, method: "patch" },
   { route: '/api/genres', handler: _lazy_FgRSH3, lazy: true, middleware: false, method: "get" },
+  { route: '/api/genres', handler: _lazy_FkEbU9, lazy: true, middleware: false, method: "post" },
   { route: '/__nuxt_error', handler: _lazy_Sgl683, lazy: true, middleware: false, method: undefined },
   { route: '/api/_auth/session', handler: _56IsM9, lazy: false, middleware: false, method: "delete" },
   { route: '/api/_auth/session', handler: _D49Rar, lazy: false, middleware: false, method: "get" },
@@ -1826,8 +1859,6 @@ const errorDev = /*#__PURE__*/Object.freeze({
   template: template$1
 });
 
-const db = globalThis.prisma || new PrismaClient();
-
 const github_get = defineOAuthGitHubEventHandler({
   config: {
     emailRequired: true
@@ -1878,14 +1909,6 @@ const github_get$1 = /*#__PURE__*/Object.freeze({
   default: github_get
 });
 
-const authSchema = z.object({
-  email: z.string().email(),
-  password: z.string().min(8)
-});
-z.object({
-  name: z.string().min(1)
-});
-
 const login_post = defineEventHandler(async (event) => {
   const { email, password } = await readValidatedBody(event, (body) => authSchema.parse(body));
   let currentUser = await db.user.findUnique({
@@ -1896,7 +1919,7 @@ const login_post = defineEventHandler(async (event) => {
   if (!currentUser) {
     throw createError({
       statusCode: 402,
-      statusMessage: "Invalid2 credential"
+      statusMessage: "\u041D\u0435\u0432\u0456\u0440\u043D\u0456 \u043E\u0431\u043B\u0456\u043A\u043E\u0432\u0456 \u0434\u0430\u043D\u0456"
     });
   }
   if (!currentUser.password) {
@@ -1918,7 +1941,7 @@ const login_post = defineEventHandler(async (event) => {
     if (!isPasswordCorrect) {
       throw createError({
         statusCode: 401,
-        statusMessage: "Invalid credential"
+        statusMessage: "\u041D\u0435\u0432\u0456\u0440\u043D\u0456 \u043E\u0431\u043B\u0456\u043A\u043E\u0432\u0456 \u0434\u0430\u043D\u0456"
       });
     }
   }
@@ -1967,17 +1990,141 @@ const register_post$1 = /*#__PURE__*/Object.freeze({
   default: register_post
 });
 
-const index_get$1 = defineEventHandler(async (event) => {
-  return null;
+const index_delete = defineEventHandler(async (event) => {
+  var _a, _b;
+  const session = await requireUserSession(event);
+  if (session.user && ((_a = session.user) == null ? void 0 : _a.role) === "admin") {
+    try {
+      await db.genre.delete({
+        where: {
+          slug: (_b = event.context.params) == null ? void 0 : _b.slug
+        }
+      });
+    } catch (error) {
+      throw createError({
+        statusCode: 500,
+        statusMessage: "\u041F\u043E\u043C\u0438\u043B\u043A\u0430 \u043F\u0440\u0438 \u0432\u0438\u0434\u0430\u043B\u0435\u043D\u0456 \u0436\u0430\u043D\u0440\u0443"
+      });
+    }
+  } else {
+    throw createError({
+      statusCode: 401,
+      statusMessage: "\u0423 \u0434\u043E\u0441\u0442\u0443\u043F\u0456 \u0432\u0456\u0434\u043C\u043E\u0432\u043B\u0435\u043D\u043E. \u0412\u0438 \u043D\u0435 \u0430\u0432\u0442\u043E\u0440\u0438\u0437\u043E\u0432\u0430\u043D\u0456 \u044F\u043A \u0430\u0434\u043C\u0456\u043D\u0456\u0441\u0442\u0440\u0430\u0442\u043E\u0440"
+    });
+  }
 });
 
-const index_get$2 = /*#__PURE__*/Object.freeze({
+const index_delete$1 = /*#__PURE__*/Object.freeze({
   __proto__: null,
-  default: index_get$1
+  default: index_delete
 });
 
-const index_get = /*#__PURE__*/Object.freeze({
-  __proto__: null
+const index_get$2 = defineEventHandler(async (event) => {
+  var _a;
+  const genre = await db.genre.findUnique({
+    where: {
+      slug: (_a = event.context.params) == null ? void 0 : _a.slug
+    }
+  });
+  return genre;
+});
+
+const index_get$3 = /*#__PURE__*/Object.freeze({
+  __proto__: null,
+  default: index_get$2
+});
+
+const index_patch = defineEventHandler(async (event) => {
+  var _a, _b;
+  const session = await requireUserSession(event);
+  const cyrillicToTranslit = CyrillicToTranslit({ preset: "uk" });
+  if (session.user && ((_a = session.user) == null ? void 0 : _a.role) === "admin") {
+    const { name } = await readValidatedBody(event, (body) => genreSchema.parse(body));
+    const slug = cyrillicToTranslit.transform(name, "_").toLowerCase();
+    try {
+      const genre = await db.genre.update({
+        where: {
+          slug: (_b = event.context.params) == null ? void 0 : _b.slug
+        },
+        data: {
+          name,
+          slug
+        }
+      });
+      return genre;
+    } catch (error) {
+      throw createError({
+        statusCode: 500,
+        statusMessage: "\u041F\u043E\u043C\u0438\u043B\u043A\u0430 \u043F\u0440\u0438 \u0441\u0442\u0432\u043E\u0440\u0435\u043D\u043D\u0456 \u043D\u043E\u0432\u043E\u0433\u043E \u0436\u0430\u043D\u0440\u0443"
+      });
+    }
+  } else {
+    throw createError({
+      statusCode: 401,
+      statusMessage: "\u0423 \u0434\u043E\u0441\u0442\u0443\u043F\u0456 \u0432\u0456\u0434\u043C\u043E\u0432\u043B\u0435\u043D\u043E. \u0412\u0438 \u043D\u0435 \u0430\u0432\u0442\u043E\u0440\u0438\u0437\u043E\u0432\u0430\u043D\u0456 \u044F\u043A \u0430\u0434\u043C\u0456\u043D\u0456\u0441\u0442\u0440\u0430\u0442\u043E\u0440"
+    });
+  }
+});
+
+const index_patch$1 = /*#__PURE__*/Object.freeze({
+  __proto__: null,
+  default: index_patch
+});
+
+const index_get = defineEventHandler(async (event) => {
+  const genres = await db.genre.findMany({
+    orderBy: {
+      createdAt: "desc"
+    }
+  });
+  return genres;
+});
+
+const index_get$1 = /*#__PURE__*/Object.freeze({
+  __proto__: null,
+  default: index_get
+});
+
+const index_post = defineEventHandler(async (event) => {
+  var _a;
+  const session = await requireUserSession(event);
+  const cyrillicToTranslit = CyrillicToTranslit({ preset: "uk" });
+  if (session.user && ((_a = session.user) == null ? void 0 : _a.role) === "admin") {
+    const { name } = await readValidatedBody(event, (body) => genreSchema.parse(body));
+    const slug = cyrillicToTranslit.transform(name, "_").toLowerCase();
+    try {
+      let genre = await db.genre.findUnique({
+        where: { slug }
+      });
+      console.log(genre);
+      if (genre) {
+        throw new Error();
+      }
+      genre = await db.genre.create({
+        data: {
+          name,
+          slug,
+          createdBy: session.user.id
+        }
+      });
+      return genre;
+    } catch (error) {
+      throw createError({
+        statusCode: 500,
+        statusMessage: "\u041F\u043E\u043C\u0438\u043B\u043A\u0430 \u043F\u0440\u0438 \u0441\u0442\u0432\u043E\u0440\u0435\u043D\u043D\u0456 \u043D\u043E\u0432\u043E\u0433\u043E \u0436\u0430\u043D\u0440\u0443"
+      });
+    }
+  } else {
+    throw createError({
+      statusCode: 401,
+      statusMessage: "\u0423 \u0434\u043E\u0441\u0442\u0443\u043F\u0456 \u0432\u0456\u0434\u043C\u043E\u0432\u043B\u0435\u043D\u043E. \u0412\u0438 \u043D\u0435 \u0430\u0432\u0442\u043E\u0440\u0438\u0437\u043E\u0432\u0430\u043D\u0456 \u044F\u043A \u0430\u0434\u043C\u0456\u043D\u0456\u0441\u0442\u0440\u0430\u0442\u043E\u0440"
+    });
+  }
+});
+
+const index_post$1 = /*#__PURE__*/Object.freeze({
+  __proto__: null,
+  default: index_post
 });
 
 const Vue3 = version[0] === "3";

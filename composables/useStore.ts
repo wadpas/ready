@@ -1,18 +1,19 @@
-import { title } from 'process'
 import { toast } from '~/components/ui/toast'
 import type { APIError } from '~/types'
 
 interface State {
   isLoading: boolean
   appError: APIError | null
+  isModalVisible: boolean
 }
 const state = reactive<State>({
   isLoading: false,
   appError: null,
+  isModalVisible: false,
 })
 
 export default () => {
-  const { isLoading, appError } = toRefs(state)
+  const { isLoading, appError, isModalVisible } = toRefs(state)
 
   const toggleLoading = (value: boolean) => {
     state.isLoading = value
@@ -20,6 +21,12 @@ export default () => {
 
   const toggleError = (error: APIError) => {
     state.appError = error
+    return error
+  }
+
+  const toggleModal = (value: boolean) => {
+    state.isModalVisible = value
+    return value
   }
 
   const showError = (error: APIError) => {
@@ -42,6 +49,8 @@ export default () => {
   return {
     isLoading,
     appError,
+    isModalVisible,
+    toggleModal,
     toggleLoading,
     toggleError,
     showError,
