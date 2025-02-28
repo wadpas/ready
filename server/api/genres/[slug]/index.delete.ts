@@ -5,12 +5,11 @@ export default defineEventHandler(async (event) => {
 
   if (session.user && session.user?.role === 'admin') {
     try {
-      // await db.genre.delete({
-      //   where: {
-      //     slug: event.context.params?.slug,
-      //   },
-      // })
-      console.log(event.context.params?.slug)
+      await db.genre.delete({
+        where: {
+          slug: event.context.params?.slug,
+        },
+      })
     } catch (error) {
       throw createError({
         statusCode: 500,

@@ -1,7 +1,7 @@
 <template>
   <Dialog
-    :open="isOpen"
-    @update:open="emits('onClose')">
+    :open="isModalVisible"
+    @update:open="emit('onClose')">
     <DialogContent>
       <DialogHeader>
         <DialogTitle v-if="title">{{ title }}</DialogTitle>
@@ -17,22 +17,13 @@
 </template>
 
 <script setup lang="ts">
-  const props = defineProps<{
+  defineProps<{
+    title: string
+    description: string
     isModalVisible: boolean
-    title?: string
-    description?: string
   }>()
 
-  const emits = defineEmits(['onClose'])
-
-  const isOpen = computed({
-    get() {
-      return props.isModalVisible
-    },
-    set() {
-      emits('onClose')
-    },
-  })
+  const emit = defineEmits(['onClose'])
 </script>
 
 <style scoped></style>

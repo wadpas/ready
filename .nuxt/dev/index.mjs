@@ -1995,7 +1995,11 @@ const index_delete = defineEventHandler(async (event) => {
   const session = await requireUserSession(event);
   if (session.user && ((_a = session.user) == null ? void 0 : _a.role) === "admin") {
     try {
-      console.log((_b = event.context.params) == null ? void 0 : _b.slug);
+      await db.genre.delete({
+        where: {
+          slug: (_b = event.context.params) == null ? void 0 : _b.slug
+        }
+      });
     } catch (error) {
       throw createError({
         statusCode: 500,
@@ -2103,6 +2107,7 @@ const index_post = defineEventHandler(async (event) => {
           createdBy: session.user.id
         }
       });
+      await new Promise((resolve) => setTimeout(resolve, 4e3));
       return genre;
     } catch (error) {
       throw createError({

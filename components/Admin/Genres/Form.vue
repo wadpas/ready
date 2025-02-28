@@ -6,7 +6,7 @@
         description="Введіть інформацію для створення/редагування жанру">
         <Button
           v-if="isEditing"
-          @click="toggleAlertModal(true)"
+          @click="isModalVisible = true"
           variant="destructive">
           <Icon
             size="20"
@@ -28,8 +28,7 @@
             <FormControl>
               <Input
                 placeholder="Детектив"
-                v-bind="componentField"
-                :disable="isLoading" />
+                v-bind="componentField" />
             </FormControl>
             <FormDescription />
             <FormMessage />
@@ -37,16 +36,23 @@
         </FormField>
       </div>
       <Button
-        :disable="isLoading"
         class="ml-auto"
         type="submit">
         Зберегти
       </Button>
+      <Button
+        class="ml-4"
+        type="button"
+        @click="navigateTo('/admin/genres')">
+        Скасувати
+      </Button>
     </form>
   </div>
   <AlertModal
-    v-if="isModalVisible"
-    @on-confirm="deleteGenre"></AlertModal>
+    :isModalVisible="isModalVisible"
+    @on-close="isModalVisible = false"
+    @on-confirm="deleteGenre">
+  </AlertModal>
 </template>
 
 <script setup lang="ts">
@@ -54,11 +60,12 @@
   import { toTypedSchema } from '@vee-validate/zod'
   import { useForm } from 'vee-validate'
   import { genreSchema } from '~/server/utils/validations'
+  import { toast } from '~/components/ui/toast'
 
-  const { isLoading, isModalVisible, toggleLoading, toggleAlertModal, showError, showMessage, toggleError } = useStore()
   const isEditing = ref(true)
-
+  const isModalVisible = ref(false)
   const route = useRoute()
+
   const { data: currentGenre } = await useFetch(`/api/genres/${(route.params as RouteParams).slug}`)
 
   watchEffect(() => {
@@ -77,7 +84,6 @@
 
   const onSubmit = form.handleSubmit(async (values) => {
     try {
-      toggleLoading(true)
       if (isEditing.value) {
         $fetch(`/api/genres/${(route.params as RouteParams).slug}`, {
           method: 'PATCH',
@@ -89,38 +95,41 @@
           body: values,
         })
       }
-      showMessage({
+      navigateTo('/admin/genres')
+      toast({
         title: 'Операція успішна',
         description: 'Всі дані були успішно збережені',
       })
-      await navigateTo('/admin/genres')
       refreshNuxtData('genres')
-    } catch (error) {
-      console.log(error)
-      const err = toggleError(error as APIError)
-      showError(err)
+    } catch (error: unknown) {
+      const err = error as APIError
+      toast({
+        variant: 'destructive',
+        title: ` Помилка ${err.statusCode}`,
+        description: err.message,
+      })
     } finally {
-      toggleLoading(false)
     }
   })
 
   const deleteGenre = async () => {
     try {
-      toggleLoading(true)
-      $fetch(`/api/genres/${(route.params as RouteParams).slug}`, {
+      await $fetch(`/api/genres/${(route.params as RouteParams).slug}`, {
         method: 'DELETE',
       })
-      showMessage({
-        title: 'Операція успішна',
-        description: 'Всі дані були успішно видалені',
-      })
       navigateTo('/admin/genres')
+      toast({
+        title: 'Операція успішна',
+        description: 'Дані були успішно видалені',
+      })
       refreshNuxtData('genres')
-    } catch (error) {
-      const err = handleError(error)
-      showError(err)
-    } finally {
-      toggleLoading(false)
+    } catch (error: unknown) {
+      const err = error as APIError
+      toast({
+        variant: 'destructive',
+        title: ` Помилка ${err.statusCode}`,
+        description: err.message,
+      })
     }
   }
 </script>

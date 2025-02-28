@@ -1,39 +1,3 @@
-<script setup lang="ts">
-  const { loggedIn, user, fetch: refreshSession } = useUserSession()
-
-  type Payload = {
-    email: string
-    password: string
-  }
-
-  const form = ref<Payload>({
-    email: '',
-    password: '',
-  })
-
-  const { isLoading, appError, toggleLoading, toggleError, showError, showMessage } = useStore()
-  const onSubmit = async () => {
-    try {
-      toggleLoading(true)
-      await $fetch('/api/auth/register', {
-        method: 'POST',
-        body: form.value,
-      })
-      showMessage({
-        title: 'Вітаємо!',
-      })
-      await refreshSession()
-      await navigateTo('/')
-      navigateTo('/')
-    } catch (error) {
-      const err = handleError(error)
-      showError(err)
-    } finally {
-      toggleLoading(false)
-    }
-  }
-</script>
-
 <template>
   <div class="flex flex-col items-center justify-center min-h-screen">
     <div class="w-full max-w-sm">
@@ -88,3 +52,43 @@
     </div>
   </div>
 </template>
+
+<script setup lang="ts">
+  import { toast } from '~/components/ui/toast'
+  import type { APIError } from '~/types'
+
+  const { loggedIn, user, fetch: refreshSession } = useUserSession()
+
+  type Payload = {
+    email: string
+    password: string
+  }
+
+  const form = ref<Payload>({
+    email: '',
+    password: '',
+  })
+
+  const onSubmit = async () => {
+    try {
+      await $fetch('/api/auth/register', {
+        method: 'POST',
+        body: form.value,
+      })
+      toast({
+        title: 'Реєстрація успішна',
+        description: `Вітаємо ${user.value} на сайті!`,
+      })
+      await refreshSession()
+      await navigateTo('/')
+      navigateTo('/')
+    } catch (error: unknown) {
+      const err = error as APIError
+      toast({
+        variant: 'destructive',
+        title: ` Помилка ${err.statusCode}`,
+        description: err.message,
+      })
+    }
+  }
+</script>

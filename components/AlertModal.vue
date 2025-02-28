@@ -1,18 +1,16 @@
 <template>
   <Modal
-    :is-modal-visible="isModalVisible"
-    @on-close="toggleAlertModal(false)"
+    :isModalVisible="isModalVisible"
+    @on-close="emit('onClose')"
     title="Увага!"
     description="Цю дію неможливо відмінити.Ви впевнені?">
-    <div class="flex items-center justify-end w-full pt-6 space-x-2">
+    <div class="flex items-center justify-end w-full pt-6 space-x-4">
       <Button
-        :disabled="isLoading"
         variant="outline"
-        @click="toggleAlertModal(false)">
+        @click="emit('onClose')">
         Скасувати
       </Button>
       <Button
-        :disabled="isLoading"
         variant="destructive"
         @click="emit('onConfirm')">
         Підтвердити
@@ -22,9 +20,10 @@
 </template>
 
 <script setup lang="ts">
-  const { isModalVisible, toggleAlertModal, isLoading } = useStore()
-  // const isVisible = computed(() => isModalVisible.value)
-  const emit = defineEmits(['onConfirm'])
+  defineProps<{
+    isModalVisible: boolean
+  }>()
+  const emit = defineEmits(['onConfirm', 'onClose'])
 </script>
 
 <style scoped></style>

@@ -1,5 +1,5 @@
 <template>
-  <DropdownMenu>
+  <DropdownMenu disabled="isLoading">
     <DropdownMenuTrigger as-child>
       <Button
         variant="ghost"
@@ -22,7 +22,7 @@
           name="radix-icons:pencil-2" />
         <span>Редагувати</span>
       </DropdownMenuItem>
-      <DropdownMenuItem @click="toggleAlertModal(true)">
+      <DropdownMenuItem @click="isModalVisible = true">
         <Icon
           size="20"
           name="radix-icons:trash" />
@@ -31,14 +31,18 @@
     </DropdownMenuContent>
   </DropdownMenu>
   <AlertModal
-    v-if="isModalVisible"
+    :isModalVisible="isModalVisible"
+    @on-close="isModalVisible = false"
     @on-confirm="deleteGenre(genre.slug)">
   </AlertModal>
 </template>
 
 <script setup lang="ts">
-  const { toggleAlertModal, toggleLoading, showError, showMessage, isModalVisible } = useStore()
-  const props = defineProps<{
+  import { toast } from '~/components/ui/toast'
+  import type { APIError } from '~/types'
+  const isModalVisible = ref(false)
+
+  defineProps<{
     genre: {
       slug: string
     }
@@ -46,7 +50,7 @@
 
   function copy(slug: string) {
     navigator.clipboard.writeText(slug)
-    showMessage({
+    toast({
       title: 'Виконано!',
       description: 'Назва жанру (трансліт) скопійовано',
     })
@@ -54,22 +58,21 @@
 
   const deleteGenre = async (slug: string) => {
     try {
-      toggleLoading(true)
       $fetch(`/api/genres/${slug}`, {
         method: 'DELETE',
       })
-      console.log(slug)
-
-      showMessage({
+      toast({
         title: 'Операція успішна',
         description: 'Дані були успішно видалені',
       })
       refreshNuxtData('genres')
-    } catch (error) {
-      const err = handleError(error)
-      showError(err)
-    } finally {
-      toggleLoading(false)
+    } catch (error: unknown) {
+      const err = error as APIError
+      toast({
+        variant: 'destructive',
+        title: ` Помилка ${err.statusCode}`,
+        description: err.message,
+      })
     }
   }
 </script>

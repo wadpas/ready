@@ -1,39 +1,3 @@
-<script setup lang="ts">
-  const { fetch: refreshSession } = useUserSession()
-
-  type Payload = {
-    email: string
-    password: string
-  }
-
-  const form = ref<Payload>({
-    email: '',
-    password: '',
-  })
-
-  const { isLoading, toggleLoading, showError, showMessage } = useStore()
-  const onSubmit = async () => {
-    try {
-      toggleLoading(true)
-      await $fetch('/api/auth/login', {
-        method: 'POST',
-        body: form.value,
-      })
-      showMessage({
-        title: 'Вітаємо!',
-      })
-      await refreshSession()
-      await navigateTo('/')
-      navigateTo('/')
-    } catch (error) {
-      const err = handleError(error)
-      showError(err)
-    } finally {
-      toggleLoading(false)
-    }
-  }
-</script>
-
 <template>
   <div class="flex flex-col items-center justify-center min-h-screen">
     <div class="w-full max-w-sm">
@@ -71,7 +35,6 @@
           </CardContent>
           <CardFooter class="flex flex-col gap-2">
             <Button
-              :disabled="isLoading"
               class="w-full"
               type="submit">
               Увійти
@@ -90,3 +53,43 @@
     </div>
   </div>
 </template>
+
+<script setup lang="ts">
+  import { toast } from '~/components/ui/toast'
+  import type { APIError } from '~/types'
+
+  const { user, fetch: refreshSession } = useUserSession()
+
+  type Payload = {
+    email: string
+    password: string
+  }
+
+  const form = ref<Payload>({
+    email: '',
+    password: '',
+  })
+
+  const onSubmit = async () => {
+    try {
+      await $fetch('/api/auth/login', {
+        method: 'POST',
+        body: form.value,
+      })
+      toast({
+        title: 'Вхід успішний',
+        description: `Вітаємо ${user.value} на сайті!`,
+      })
+      await refreshSession()
+      await navigateTo('/')
+      navigateTo('/')
+    } catch (error: unknown) {
+      const err = error as APIError
+      toast({
+        variant: 'destructive',
+        title: ` Помилка ${err.statusCode}`,
+        description: err.message,
+      })
+    }
+  }
+</script>

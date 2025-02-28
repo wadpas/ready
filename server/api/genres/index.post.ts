@@ -26,6 +26,7 @@ export default defineEventHandler(async (event) => {
           createdBy: session.user.id,
         },
       })
+      await new Promise((resolve) => setTimeout(resolve, 4000))
       return genre
     } catch (error) {
       throw createError({
