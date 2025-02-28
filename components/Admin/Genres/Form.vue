@@ -6,7 +6,7 @@
         description="Введіть інформацію для створення/редагування жанру">
         <Button
           v-if="isEditing"
-          @click="toggleModal(true)"
+          @click="toggleAlertModal(true)"
           variant="destructive">
           <Icon
             size="20"
@@ -55,7 +55,7 @@
   import { useForm } from 'vee-validate'
   import { genreSchema } from '~/server/utils/validations'
 
-  const { isLoading, isModalVisible, toggleLoading, toggleModal, showError, showMessage, toggleError } = useStore()
+  const { isLoading, isModalVisible, toggleLoading, toggleAlertModal, showError, showMessage, toggleError } = useStore()
   const isEditing = ref(true)
 
   const route = useRoute()
@@ -84,7 +84,7 @@
           body: values,
         })
       } else {
-        const data = await $fetch('/api/genres', {
+        $fetch('/api/genres', {
           method: 'POST',
           body: values,
         })
@@ -94,6 +94,7 @@
         description: 'Всі дані були успішно збережені',
       })
       await navigateTo('/admin/genres')
+      refreshNuxtData('genres')
     } catch (error) {
       console.log(error)
       const err = toggleError(error as APIError)
@@ -114,6 +115,7 @@
         description: 'Всі дані були успішно видалені',
       })
       navigateTo('/admin/genres')
+      refreshNuxtData('genres')
     } catch (error) {
       const err = handleError(error)
       showError(err)

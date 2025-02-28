@@ -1995,11 +1995,7 @@ const index_delete = defineEventHandler(async (event) => {
   const session = await requireUserSession(event);
   if (session.user && ((_a = session.user) == null ? void 0 : _a.role) === "admin") {
     try {
-      await db.genre.delete({
-        where: {
-          slug: (_b = event.context.params) == null ? void 0 : _b.slug
-        }
-      });
+      console.log((_b = event.context.params) == null ? void 0 : _b.slug);
     } catch (error) {
       throw createError({
         statusCode: 500,

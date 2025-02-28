@@ -24,7 +24,7 @@ export default () => {
     return error
   }
 
-  const toggleModal = (value: boolean) => {
+  const toggleAlertModal = (value: boolean) => {
     state.isModalVisible = value
     return value
   }
@@ -50,7 +50,7 @@ export default () => {
     isLoading,
     appError,
     isModalVisible,
-    toggleModal,
+    toggleAlertModal,
     toggleLoading,
     toggleError,
     showError,

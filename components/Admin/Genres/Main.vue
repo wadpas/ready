@@ -12,12 +12,20 @@
         </Button>
       </NuxtLink>
     </Heading>
-    {{ currentGenres }}
   </div>
+  <!-- @vue-ignore -->
+  <DataTable
+    v-if="status === 'success'"
+    :columns="columns"
+    :data="genres"
+    column-to-search="name" />
 </template>
 
 <script setup lang="ts">
-  const { data: currentGenres } = await useFetch(`/api/genres`)
+  import { columns } from '~/components/Admin/Genres/columns'
+  const { data: genres, status } = await useFetch(`/api/genres`, {
+    key: 'genres',
+  })
 </script>
 
 <style lang="scss" scoped></style>
