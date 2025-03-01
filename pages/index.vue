@@ -1,6 +1,4 @@
 <template>
-  <div>Main</div>
-  <pre>{{ user }}</pre>
   <NuxtLink to="/auth/login">Login</NuxtLink>
   <NuxtLink to="/auth/register">Register</NuxtLink>
   <NuxtLink to="/admin">Admin</NuxtLink>

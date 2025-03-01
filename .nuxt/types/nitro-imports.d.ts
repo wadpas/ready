@@ -9,6 +9,7 @@ declare global {
   const appendResponseHeaders: typeof import('../../node_modules/h3')['appendResponseHeaders']
   const assertMethod: typeof import('../../node_modules/h3')['assertMethod']
   const authSchema: typeof import('../../server/utils/validations')['authSchema']
+  const authorSchema: typeof import('../../server/utils/validations')['authorSchema']
   const cachedEventHandler: typeof import('../../node_modules/nitropack/dist/runtime/internal/cache')['cachedEventHandler']
   const cachedFunction: typeof import('../../node_modules/nitropack/dist/runtime/internal/cache')['cachedFunction']
   const callNodeListener: typeof import('../../node_modules/h3')['callNodeListener']
@@ -335,4 +336,4 @@ export { sessionHooks, getUserSession, setUserSession, replaceUserSession, clear
 export { sanitizeUser } from '../../server/utils/auth';
 export { default as db } from '../../server/utils/db';
 export { handleError } from '../../server/utils/error';
-export { authSchema, genreSchema } from '../../server/utils/validations';
+export { authSchema, genreSchema, authorSchema } from '../../server/utils/validations';

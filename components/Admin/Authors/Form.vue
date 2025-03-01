@@ -2,8 +2,8 @@
   <div>
     <div class="flex items-center justify-between">
       <Heading
-        title="Жанр"
-        description="Введіть інформацію для створення/редагування жанру">
+        title="Автор"
+        description="Введіть інформацію для створення/редагування імя автора">
         <Button
           v-if="isEditing"
           @click="isModalVisible = true"
@@ -24,10 +24,10 @@
           v-slot="{ componentField }"
           name="name">
           <FormItem>
-            <FormLabel>Назва</FormLabel>
+            <FormLabel>Ім'я</FormLabel>
             <FormControl>
               <Input
-                placeholder="Детектив"
+                placeholder="Стівен Кінг"
                 v-bind="componentField" />
             </FormControl>
             <FormDescription />
@@ -43,7 +43,7 @@
       <Button
         class="ml-4"
         type="button"
-        @click="navigateTo('/admin/genres')">
+        @click="navigateTo('/admin/authors')">
         Скасувати
       </Button>
     </form>
@@ -51,7 +51,7 @@
   <AlertModal
     :isModalVisible="isModalVisible"
     @on-close="isModalVisible = false"
-    @on-confirm="deleteGenre">
+    @on-confirm="deleteAuthor">
   </AlertModal>
 </template>
 
@@ -59,43 +59,43 @@
   import type { APIError, RouteParams } from '~/types'
   import { toTypedSchema } from '@vee-validate/zod'
   import { useForm } from 'vee-validate'
-  import { genreSchema } from '~/server/utils/validations'
+  import { authorSchema } from '~/server/utils/validations'
   import { toast } from '~/components/ui/toast'
 
   const isEditing = ref(true)
   const isModalVisible = ref(false)
   const route = useRoute()
 
-  const { data: currentGenre } = await useFetch(`/api/genres/${(route.params as RouteParams).slug}`)
+  const { data: currentAuthor } = await useFetch(`/api/authors/${(route.params as RouteParams).slug}`)
 
   watchEffect(() => {
     if (route.params.slug === 'new') {
       isEditing.value = false
-    } else if (!currentGenre.value) {
-      navigateTo('/admin/genres')
+    } else if (!currentAuthor.value) {
+      navigateTo('/admin/authors')
     }
   })
 
-  const formSchema = toTypedSchema(genreSchema)
+  const formSchema = toTypedSchema(authorSchema)
   const form = useForm({
     validationSchema: formSchema,
-    initialValues: currentGenre.value || {},
+    initialValues: currentAuthor.value || {},
   })
 
   const onSubmit = form.handleSubmit(async (values) => {
     try {
       if (isEditing.value) {
-        await $fetch(`/api/genres/${(route.params as RouteParams).slug}`, {
+        await $fetch(`/api/authors/${(route.params as RouteParams).slug}`, {
           method: 'PATCH',
           body: values,
         })
       } else {
-        await $fetch('/api/genres', {
+        await $fetch('/api/authors', {
           method: 'POST',
           body: values,
         })
       }
-      navigateTo('/admin/genres')
+      navigateTo('/admin/authors')
       toast({
         title: 'Операція успішна',
         description: 'Всі дані були успішно збережені',
@@ -111,12 +111,12 @@
     }
   })
 
-  const deleteGenre = async () => {
+  const deleteAuthor = async () => {
     try {
-      await $fetch(`/api/genres/${(route.params as RouteParams).slug}`, {
+      await $fetch(`/api/authors/${(route.params as RouteParams).slug}`, {
         method: 'DELETE',
       })
-      navigateTo('/admin/genres')
+      navigateTo('/admin/authors')
       toast({
         title: 'Операція успішна',
         description: 'Дані були успішно видалені',

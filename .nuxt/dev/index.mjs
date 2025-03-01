@@ -1515,6 +1515,9 @@ const authSchema = z.object({
 const genreSchema = z.object({
   name: z.string().min(1)
 });
+const authorSchema = z.object({
+  name: z.string().min(1)
+});
 
 const sessionHooks = createHooks();
 async function getUserSession(event) {
@@ -1639,6 +1642,11 @@ const _6vegE0 = defineCachedEventHandler(async (event) => {
 const _lazy_Ej1chm = () => Promise.resolve().then(function () { return github_get$1; });
 const _lazy_EwjYhE = () => Promise.resolve().then(function () { return login_post$1; });
 const _lazy_51VOrk = () => Promise.resolve().then(function () { return register_post$1; });
+const _lazy_XojTn6 = () => Promise.resolve().then(function () { return index_delete$3; });
+const _lazy_9Y4jpp = () => Promise.resolve().then(function () { return index_get$7; });
+const _lazy_MrZOBd = () => Promise.resolve().then(function () { return index_patch$3; });
+const _lazy_TW36Jx = () => Promise.resolve().then(function () { return index_get$5; });
+const _lazy_Z05PZF = () => Promise.resolve().then(function () { return index_post$3; });
 const _lazy_XQ0Dpm = () => Promise.resolve().then(function () { return index_delete$1; });
 const _lazy_TtDnFc = () => Promise.resolve().then(function () { return index_get$3; });
 const _lazy_jVNdCP = () => Promise.resolve().then(function () { return index_patch$1; });
@@ -1650,6 +1658,11 @@ const handlers = [
   { route: '/api/auth/github', handler: _lazy_Ej1chm, lazy: true, middleware: false, method: "get" },
   { route: '/api/auth/login', handler: _lazy_EwjYhE, lazy: true, middleware: false, method: "post" },
   { route: '/api/auth/register', handler: _lazy_51VOrk, lazy: true, middleware: false, method: "post" },
+  { route: '/api/authors/:slug', handler: _lazy_XojTn6, lazy: true, middleware: false, method: "delete" },
+  { route: '/api/authors/:slug', handler: _lazy_9Y4jpp, lazy: true, middleware: false, method: "get" },
+  { route: '/api/authors/:slug', handler: _lazy_MrZOBd, lazy: true, middleware: false, method: "patch" },
+  { route: '/api/authors', handler: _lazy_TW36Jx, lazy: true, middleware: false, method: "get" },
+  { route: '/api/authors', handler: _lazy_Z05PZF, lazy: true, middleware: false, method: "post" },
   { route: '/api/genres/:slug', handler: _lazy_XQ0Dpm, lazy: true, middleware: false, method: "delete" },
   { route: '/api/genres/:slug', handler: _lazy_TtDnFc, lazy: true, middleware: false, method: "get" },
   { route: '/api/genres/:slug', handler: _lazy_jVNdCP, lazy: true, middleware: false, method: "patch" },
@@ -1990,6 +2003,143 @@ const register_post$1 = /*#__PURE__*/Object.freeze({
   default: register_post
 });
 
+const index_delete$2 = defineEventHandler(async (event) => {
+  var _a, _b;
+  const session = await requireUserSession(event);
+  if (session.user && ((_a = session.user) == null ? void 0 : _a.role) === "admin") {
+    try {
+      await db.author.delete({
+        where: {
+          slug: (_b = event.context.params) == null ? void 0 : _b.slug
+        }
+      });
+    } catch (error) {
+      throw createError({
+        statusCode: 500,
+        statusMessage: "\u041F\u043E\u043C\u0438\u043B\u043A\u0430 \u043F\u0440\u0438 \u0432\u0438\u0434\u0430\u043B\u0435\u043D\u0456 \u0436\u0430\u043D\u0440\u0443"
+      });
+    }
+  } else {
+    throw createError({
+      statusCode: 401,
+      statusMessage: "\u0423 \u0434\u043E\u0441\u0442\u0443\u043F\u0456 \u0432\u0456\u0434\u043C\u043E\u0432\u043B\u0435\u043D\u043E. \u0412\u0438 \u043D\u0435 \u0430\u0432\u0442\u043E\u0440\u0438\u0437\u043E\u0432\u0430\u043D\u0456 \u044F\u043A \u0430\u0434\u043C\u0456\u043D\u0456\u0441\u0442\u0440\u0430\u0442\u043E\u0440"
+    });
+  }
+});
+
+const index_delete$3 = /*#__PURE__*/Object.freeze({
+  __proto__: null,
+  default: index_delete$2
+});
+
+const index_get$6 = defineEventHandler(async (event) => {
+  var _a;
+  const author = await db.author.findUnique({
+    where: {
+      slug: (_a = event.context.params) == null ? void 0 : _a.slug
+    }
+  });
+  return author;
+});
+
+const index_get$7 = /*#__PURE__*/Object.freeze({
+  __proto__: null,
+  default: index_get$6
+});
+
+const index_patch$2 = defineEventHandler(async (event) => {
+  var _a, _b;
+  const session = await requireUserSession(event);
+  const cyrillicToTranslit = CyrillicToTranslit({ preset: "uk" });
+  if (session.user && ((_a = session.user) == null ? void 0 : _a.role) === "admin") {
+    const { name } = await readValidatedBody(event, (body) => authorSchema.parse(body));
+    const slug = cyrillicToTranslit.transform(name, "_").toLowerCase();
+    try {
+      const author = await db.author.update({
+        where: {
+          slug: (_b = event.context.params) == null ? void 0 : _b.slug
+        },
+        data: {
+          name,
+          slug
+        }
+      });
+      return author;
+    } catch (error) {
+      throw createError({
+        statusCode: 500,
+        statusMessage: "\u041F\u043E\u043C\u0438\u043B\u043A\u0430 \u043F\u0440\u0438 \u0441\u0442\u0432\u043E\u0440\u0435\u043D\u043D\u0456 \u043D\u043E\u0432\u043E\u0433\u043E \u0436\u0430\u043D\u0440\u0443"
+      });
+    }
+  } else {
+    throw createError({
+      statusCode: 401,
+      statusMessage: "\u0423 \u0434\u043E\u0441\u0442\u0443\u043F\u0456 \u0432\u0456\u0434\u043C\u043E\u0432\u043B\u0435\u043D\u043E. \u0412\u0438 \u043D\u0435 \u0430\u0432\u0442\u043E\u0440\u0438\u0437\u043E\u0432\u0430\u043D\u0456 \u044F\u043A \u0430\u0434\u043C\u0456\u043D\u0456\u0441\u0442\u0440\u0430\u0442\u043E\u0440"
+    });
+  }
+});
+
+const index_patch$3 = /*#__PURE__*/Object.freeze({
+  __proto__: null,
+  default: index_patch$2
+});
+
+const index_get$4 = defineEventHandler(async (event) => {
+  const authors = await db.author.findMany({
+    orderBy: {
+      createdAt: "desc"
+    }
+  });
+  return authors;
+});
+
+const index_get$5 = /*#__PURE__*/Object.freeze({
+  __proto__: null,
+  default: index_get$4
+});
+
+const index_post$2 = defineEventHandler(async (event) => {
+  var _a;
+  const session = await requireUserSession(event);
+  const cyrillicToTranslit = CyrillicToTranslit({ preset: "uk" });
+  if (session.user && ((_a = session.user) == null ? void 0 : _a.role) === "admin") {
+    const { name } = await readValidatedBody(event, (body) => authorSchema.parse(body));
+    const slug = cyrillicToTranslit.transform(name, "_").toLowerCase();
+    try {
+      let author = await db.author.findUnique({
+        where: { slug }
+      });
+      console.log(author);
+      if (author) {
+        throw new Error();
+      }
+      author = await db.author.create({
+        data: {
+          name,
+          slug,
+          createdBy: session.user.id
+        }
+      });
+      return author;
+    } catch (error) {
+      throw createError({
+        statusCode: 500,
+        statusMessage: "\u041F\u043E\u043C\u0438\u043B\u043A\u0430 \u043F\u0440\u0438 \u0441\u0442\u0432\u043E\u0440\u0435\u043D\u043D\u0456 \u043D\u043E\u0432\u043E\u0433\u043E \u0436\u0430\u043D\u0440\u0443"
+      });
+    }
+  } else {
+    throw createError({
+      statusCode: 401,
+      statusMessage: "\u0423 \u0434\u043E\u0441\u0442\u0443\u043F\u0456 \u0432\u0456\u0434\u043C\u043E\u0432\u043B\u0435\u043D\u043E. \u0412\u0438 \u043D\u0435 \u0430\u0432\u0442\u043E\u0440\u0438\u0437\u043E\u0432\u0430\u043D\u0456 \u044F\u043A \u0430\u0434\u043C\u0456\u043D\u0456\u0441\u0442\u0440\u0430\u0442\u043E\u0440"
+    });
+  }
+});
+
+const index_post$3 = /*#__PURE__*/Object.freeze({
+  __proto__: null,
+  default: index_post$2
+});
+
 const index_delete = defineEventHandler(async (event) => {
   var _a, _b;
   const session = await requireUserSession(event);
@@ -2107,7 +2257,6 @@ const index_post = defineEventHandler(async (event) => {
           createdBy: session.user.id
         }
       });
-      await new Promise((resolve) => setTimeout(resolve, 4e3));
       return genre;
     } catch (error) {
       throw createError({

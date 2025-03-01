@@ -12,7 +12,7 @@
       </Button>
       <Button
         variant="destructive"
-        @click="emit('onConfirm')">
+        @click="emit('onClose'), emit('onConfirm')">
         Підтвердити
       </Button>
     </div>

@@ -10,13 +10,13 @@
       </Button>
     </DropdownMenuTrigger>
     <DropdownMenuContent align="end">
-      <DropdownMenuItem @click="copy(genre.slug)">
+      <DropdownMenuItem @click="copy(author.slug)">
         <Icon
           size="20"
           name="radix-icons:copy" />
         <span>Копіювати</span>
       </DropdownMenuItem>
-      <DropdownMenuItem @click="navigateTo(`/admin/genres/${genre.slug}`)">
+      <DropdownMenuItem @click="navigateTo(`/admin/authors/${author.slug}`)">
         <Icon
           size="20"
           name="radix-icons:pencil-2" />
@@ -33,7 +33,7 @@
   <AlertModal
     :isModalVisible="isModalVisible"
     @on-close="isModalVisible = false"
-    @on-confirm="deleteGenre(genre.slug)">
+    @on-confirm="deleteAuthor(author.slug)">
   </AlertModal>
 </template>
 
@@ -43,7 +43,7 @@
   const isModalVisible = ref(false)
 
   defineProps<{
-    genre: {
+    author: {
       slug: string
     }
   }>()
@@ -56,16 +56,16 @@
     })
   }
 
-  const deleteGenre = async (slug: string) => {
+  const deleteAuthor = async (slug: string) => {
     try {
-      await $fetch(`/api/genres/${slug}`, {
+      await $fetch(`/api/authors/${slug}`, {
         method: 'DELETE',
       })
       toast({
         title: 'Операція успішна',
         description: 'Дані були успішно видалені',
       })
-      refreshNuxtData('genres')
+      refreshNuxtData('authors')
     } catch (error: unknown) {
       const err = error as APIError
       toast({
