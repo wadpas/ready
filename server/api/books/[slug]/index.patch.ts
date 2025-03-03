@@ -1,26 +1,26 @@
 import db from '~/server/utils/db'
 import CyrillicToTranslit from 'cyrillic-to-translit-js'
-import { authorSchema } from '~/server/utils/validations'
+import { bookSchema } from '~/server/utils/validations'
 
 export default defineEventHandler(async (event) => {
   const session = await requireUserSession(event)
   const cyrillicToTranslit = CyrillicToTranslit({ preset: 'uk' })
 
   if (session.user && session.user?.role === 'admin') {
-    const { name } = await readValidatedBody(event, (body) => authorSchema.parse(body))
+    const { title } = await readValidatedBody(event, (body) => bookSchema.parse(body))
     const slug = cyrillicToTranslit.transform(name, '-').toLowerCase()
 
     try {
-      const author = await db.author.update({
+      const book = await db.book.update({
         where: {
           slug: event.context.params?.slug,
         },
         data: {
-          name,
+          title,
           slug,
         },
       })
-      return author
+      return book
     } catch (error) {
       throw createError({
         statusCode: 500,

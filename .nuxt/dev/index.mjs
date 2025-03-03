@@ -1513,10 +1513,22 @@ const authSchema = z.object({
   password: z.string().min(8)
 });
 const genreSchema = z.object({
-  name: z.string().min(1)
+  name: z.string().min(1, { message: "\u0412\u0432\u0435\u0434\u0456\u0442\u044C \u043D\u0430\u0437\u0432\u0443 \u0436\u0430\u043D\u0440\u0443" })
 });
 const authorSchema = z.object({
-  name: z.string().min(1)
+  name: z.string().min(1, { message: `\u0412\u0432\u0435\u0434\u0456\u0442\u044C \u0456\u043C'\u044F \u0430\u0432\u0442\u043E\u0440\u0430` })
+});
+const bookSchema = z.object({
+  title: z.string().min(1, { message: "\u0412\u0432\u0435\u0434\u0456\u0442\u044C \u043D\u0430\u0437\u0432\u0443 \u043A\u043D\u0438\u0433\u0438" }),
+  authorIds: z.string().array().min(1, { message: "\u0414\u043E\u0434\u0430\u0439\u0442\u0435 \u0430\u0432\u0442\u043E\u0440\u0430 \u043A\u043D\u0438\u0433\u0438" }),
+  genreIds: z.string().array().min(1, { message: "\u0414\u043E\u0434\u0430\u0439\u0442\u0435 \u0436\u0430\u043D\u0440 \u043A\u043D\u0438\u0433\u0438" }),
+  description: z.string().min(1, { message: "\u0412\u0432\u0435\u0434\u0456\u0442\u044C \u043E\u043F\u0438\u0441 \u043A\u043D\u0438\u0433\u0438" }),
+  coverURLs: z.string().array().min(1, { message: "\u0414\u043E\u0434\u0430\u0439\u0442\u0435 \u043E\u0431\u043A\u043B\u0430\u0434\u0438\u043D\u043A\u0443 \u043A\u043D\u0438\u0433\u0438" }),
+  year: z.coerce.number().min(4, { message: "\u0412\u0432\u0435\u0434\u0456\u0442\u044C \u0440\u0456\u043A \u0432\u0438\u0434\u0430\u043D\u043D\u044F" }),
+  pages: z.coerce.number().min(1, { message: "\u0412\u0432\u0435\u0434\u0456\u0442\u044C \u043A\u0456\u043B\u044C\u043A\u0456\u0441\u0442\u044C \u0441\u0442\u043E\u0440\u0456\u043D\u043E\u043A" }),
+  price: z.coerce.number().min(1, { message: "\u0412\u0432\u0435\u0434\u0456\u0442\u044C \u0446\u0456\u043D\u0443 \u043A\u043D\u0438\u0433\u0438" }),
+  isFeatured: z.boolean().default(false).optional(),
+  isAvailable: z.boolean().default(true).optional()
 });
 
 const sessionHooks = createHooks();
@@ -1642,11 +1654,16 @@ const _6vegE0 = defineCachedEventHandler(async (event) => {
 const _lazy_Ej1chm = () => Promise.resolve().then(function () { return github_get$1; });
 const _lazy_EwjYhE = () => Promise.resolve().then(function () { return login_post$1; });
 const _lazy_51VOrk = () => Promise.resolve().then(function () { return register_post$1; });
-const _lazy_XojTn6 = () => Promise.resolve().then(function () { return index_delete$3; });
-const _lazy_9Y4jpp = () => Promise.resolve().then(function () { return index_get$7; });
-const _lazy_MrZOBd = () => Promise.resolve().then(function () { return index_patch$3; });
-const _lazy_TW36Jx = () => Promise.resolve().then(function () { return index_get$5; });
-const _lazy_Z05PZF = () => Promise.resolve().then(function () { return index_post$3; });
+const _lazy_XojTn6 = () => Promise.resolve().then(function () { return index_delete$5; });
+const _lazy_9Y4jpp = () => Promise.resolve().then(function () { return index_get$b; });
+const _lazy_MrZOBd = () => Promise.resolve().then(function () { return index_patch$5; });
+const _lazy_TW36Jx = () => Promise.resolve().then(function () { return index_get$9; });
+const _lazy_Z05PZF = () => Promise.resolve().then(function () { return index_post$5; });
+const _lazy_tcQJ5P = () => Promise.resolve().then(function () { return index_delete$3; });
+const _lazy_dDbK2N = () => Promise.resolve().then(function () { return index_get$7; });
+const _lazy_66uBaD = () => Promise.resolve().then(function () { return index_patch$3; });
+const _lazy_9eui6I = () => Promise.resolve().then(function () { return index_get$5; });
+const _lazy_nmqs0X = () => Promise.resolve().then(function () { return index_post$3; });
 const _lazy_XQ0Dpm = () => Promise.resolve().then(function () { return index_delete$1; });
 const _lazy_TtDnFc = () => Promise.resolve().then(function () { return index_get$3; });
 const _lazy_jVNdCP = () => Promise.resolve().then(function () { return index_patch$1; });
@@ -1663,6 +1680,11 @@ const handlers = [
   { route: '/api/authors/:slug', handler: _lazy_MrZOBd, lazy: true, middleware: false, method: "patch" },
   { route: '/api/authors', handler: _lazy_TW36Jx, lazy: true, middleware: false, method: "get" },
   { route: '/api/authors', handler: _lazy_Z05PZF, lazy: true, middleware: false, method: "post" },
+  { route: '/api/books/:slug', handler: _lazy_tcQJ5P, lazy: true, middleware: false, method: "delete" },
+  { route: '/api/books/:slug', handler: _lazy_dDbK2N, lazy: true, middleware: false, method: "get" },
+  { route: '/api/books/:slug', handler: _lazy_66uBaD, lazy: true, middleware: false, method: "patch" },
+  { route: '/api/books', handler: _lazy_9eui6I, lazy: true, middleware: false, method: "get" },
+  { route: '/api/books', handler: _lazy_nmqs0X, lazy: true, middleware: false, method: "post" },
   { route: '/api/genres/:slug', handler: _lazy_XQ0Dpm, lazy: true, middleware: false, method: "delete" },
   { route: '/api/genres/:slug', handler: _lazy_TtDnFc, lazy: true, middleware: false, method: "get" },
   { route: '/api/genres/:slug', handler: _lazy_jVNdCP, lazy: true, middleware: false, method: "patch" },
@@ -2003,7 +2025,7 @@ const register_post$1 = /*#__PURE__*/Object.freeze({
   default: register_post
 });
 
-const index_delete$2 = defineEventHandler(async (event) => {
+const index_delete$4 = defineEventHandler(async (event) => {
   var _a, _b;
   const session = await requireUserSession(event);
   if (session.user && ((_a = session.user) == null ? void 0 : _a.role) === "admin") {
@@ -2027,12 +2049,12 @@ const index_delete$2 = defineEventHandler(async (event) => {
   }
 });
 
-const index_delete$3 = /*#__PURE__*/Object.freeze({
+const index_delete$5 = /*#__PURE__*/Object.freeze({
   __proto__: null,
-  default: index_delete$2
+  default: index_delete$4
 });
 
-const index_get$6 = defineEventHandler(async (event) => {
+const index_get$a = defineEventHandler(async (event) => {
   var _a;
   const author = await db.author.findUnique({
     where: {
@@ -2042,18 +2064,18 @@ const index_get$6 = defineEventHandler(async (event) => {
   return author;
 });
 
-const index_get$7 = /*#__PURE__*/Object.freeze({
+const index_get$b = /*#__PURE__*/Object.freeze({
   __proto__: null,
-  default: index_get$6
+  default: index_get$a
 });
 
-const index_patch$2 = defineEventHandler(async (event) => {
+const index_patch$4 = defineEventHandler(async (event) => {
   var _a, _b;
   const session = await requireUserSession(event);
   const cyrillicToTranslit = CyrillicToTranslit({ preset: "uk" });
   if (session.user && ((_a = session.user) == null ? void 0 : _a.role) === "admin") {
     const { name } = await readValidatedBody(event, (body) => authorSchema.parse(body));
-    const slug = cyrillicToTranslit.transform(name, "_").toLowerCase();
+    const slug = cyrillicToTranslit.transform(name, "-").toLowerCase();
     try {
       const author = await db.author.update({
         where: {
@@ -2079,32 +2101,32 @@ const index_patch$2 = defineEventHandler(async (event) => {
   }
 });
 
-const index_patch$3 = /*#__PURE__*/Object.freeze({
+const index_patch$5 = /*#__PURE__*/Object.freeze({
   __proto__: null,
-  default: index_patch$2
+  default: index_patch$4
 });
 
-const index_get$4 = defineEventHandler(async (event) => {
+const index_get$8 = defineEventHandler(async (event) => {
   const authors = await db.author.findMany({
     orderBy: {
-      createdAt: "desc"
+      name: "asc"
     }
   });
   return authors;
 });
 
-const index_get$5 = /*#__PURE__*/Object.freeze({
+const index_get$9 = /*#__PURE__*/Object.freeze({
   __proto__: null,
-  default: index_get$4
+  default: index_get$8
 });
 
-const index_post$2 = defineEventHandler(async (event) => {
+const index_post$4 = defineEventHandler(async (event) => {
   var _a;
   const session = await requireUserSession(event);
   const cyrillicToTranslit = CyrillicToTranslit({ preset: "uk" });
   if (session.user && ((_a = session.user) == null ? void 0 : _a.role) === "admin") {
     const { name } = await readValidatedBody(event, (body) => authorSchema.parse(body));
-    const slug = cyrillicToTranslit.transform(name, "_").toLowerCase();
+    const slug = cyrillicToTranslit.transform(name, "-").toLowerCase();
     try {
       let author = await db.author.findUnique({
         where: { slug }
@@ -2117,7 +2139,7 @@ const index_post$2 = defineEventHandler(async (event) => {
         data: {
           name,
           slug,
-          createdBy: session.user.id
+          creatorId: session.user.id
         }
       });
       return author;
@@ -2125,6 +2147,153 @@ const index_post$2 = defineEventHandler(async (event) => {
       throw createError({
         statusCode: 500,
         statusMessage: "\u041F\u043E\u043C\u0438\u043B\u043A\u0430 \u043F\u0440\u0438 \u0441\u0442\u0432\u043E\u0440\u0435\u043D\u043D\u0456 \u043D\u043E\u0432\u043E\u0433\u043E \u0436\u0430\u043D\u0440\u0443"
+      });
+    }
+  } else {
+    throw createError({
+      statusCode: 401,
+      statusMessage: "\u0423 \u0434\u043E\u0441\u0442\u0443\u043F\u0456 \u0432\u0456\u0434\u043C\u043E\u0432\u043B\u0435\u043D\u043E. \u0412\u0438 \u043D\u0435 \u0430\u0432\u0442\u043E\u0440\u0438\u0437\u043E\u0432\u0430\u043D\u0456 \u044F\u043A \u0430\u0434\u043C\u0456\u043D\u0456\u0441\u0442\u0440\u0430\u0442\u043E\u0440"
+    });
+  }
+});
+
+const index_post$5 = /*#__PURE__*/Object.freeze({
+  __proto__: null,
+  default: index_post$4
+});
+
+const index_delete$2 = defineEventHandler(async (event) => {
+  var _a, _b;
+  const session = await requireUserSession(event);
+  if (session.user && ((_a = session.user) == null ? void 0 : _a.role) === "admin") {
+    try {
+      await db.book.delete({
+        where: {
+          slug: (_b = event.context.params) == null ? void 0 : _b.slug
+        }
+      });
+    } catch (error) {
+      throw createError({
+        statusCode: 500,
+        statusMessage: "\u041F\u043E\u043C\u0438\u043B\u043A\u0430 \u043F\u0440\u0438 \u0432\u0438\u0434\u0430\u043B\u0435\u043D\u0456 \u0436\u0430\u043D\u0440\u0443"
+      });
+    }
+  } else {
+    throw createError({
+      statusCode: 401,
+      statusMessage: "\u0423 \u0434\u043E\u0441\u0442\u0443\u043F\u0456 \u0432\u0456\u0434\u043C\u043E\u0432\u043B\u0435\u043D\u043E. \u0412\u0438 \u043D\u0435 \u0430\u0432\u0442\u043E\u0440\u0438\u0437\u043E\u0432\u0430\u043D\u0456 \u044F\u043A \u0430\u0434\u043C\u0456\u043D\u0456\u0441\u0442\u0440\u0430\u0442\u043E\u0440"
+    });
+  }
+});
+
+const index_delete$3 = /*#__PURE__*/Object.freeze({
+  __proto__: null,
+  default: index_delete$2
+});
+
+const index_get$6 = defineEventHandler(async (event) => {
+  var _a;
+  const genre = await db.book.findUnique({
+    where: {
+      slug: (_a = event.context.params) == null ? void 0 : _a.slug
+    }
+  });
+  return genre;
+});
+
+const index_get$7 = /*#__PURE__*/Object.freeze({
+  __proto__: null,
+  default: index_get$6
+});
+
+const index_patch$2 = defineEventHandler(async (event) => {
+  var _a, _b;
+  const session = await requireUserSession(event);
+  const cyrillicToTranslit = CyrillicToTranslit({ preset: "uk" });
+  if (session.user && ((_a = session.user) == null ? void 0 : _a.role) === "admin") {
+    const { title } = await readValidatedBody(event, (body) => bookSchema.parse(body));
+    const slug = cyrillicToTranslit.transform(name, "-").toLowerCase();
+    try {
+      const book = await db.book.update({
+        where: {
+          slug: (_b = event.context.params) == null ? void 0 : _b.slug
+        },
+        data: {
+          title,
+          slug
+        }
+      });
+      return book;
+    } catch (error) {
+      throw createError({
+        statusCode: 500,
+        statusMessage: "\u041F\u043E\u043C\u0438\u043B\u043A\u0430 \u043F\u0440\u0438 \u0441\u0442\u0432\u043E\u0440\u0435\u043D\u043D\u0456 \u043D\u043E\u0432\u043E\u0433\u043E \u0436\u0430\u043D\u0440\u0443"
+      });
+    }
+  } else {
+    throw createError({
+      statusCode: 401,
+      statusMessage: "\u0423 \u0434\u043E\u0441\u0442\u0443\u043F\u0456 \u0432\u0456\u0434\u043C\u043E\u0432\u043B\u0435\u043D\u043E. \u0412\u0438 \u043D\u0435 \u0430\u0432\u0442\u043E\u0440\u0438\u0437\u043E\u0432\u0430\u043D\u0456 \u044F\u043A \u0430\u0434\u043C\u0456\u043D\u0456\u0441\u0442\u0440\u0430\u0442\u043E\u0440"
+    });
+  }
+});
+
+const index_patch$3 = /*#__PURE__*/Object.freeze({
+  __proto__: null,
+  default: index_patch$2
+});
+
+const index_get$4 = defineEventHandler(async (event) => {
+  const books = await db.book.findMany({
+    orderBy: {
+      createdAt: "desc"
+    }
+  });
+  return books;
+});
+
+const index_get$5 = /*#__PURE__*/Object.freeze({
+  __proto__: null,
+  default: index_get$4
+});
+
+const index_post$2 = defineEventHandler(async (event) => {
+  var _a;
+  const session = await requireUserSession(event);
+  const cyrillicToTranslit = CyrillicToTranslit({ preset: "uk" });
+  if (session.user && ((_a = session.user) == null ? void 0 : _a.role) === "admin") {
+    const { title, description, coverURLs, year, pages, genreIds, authorIds, price, isFeatured, isAvailable } = await readValidatedBody(event, (body) => bookSchema.parse(body));
+    const slug = cyrillicToTranslit.transform(title, "-").toLowerCase();
+    try {
+      let book = await db.book.findUnique({
+        where: { slug }
+      });
+      if (book) {
+        throw createError({
+          statusCode: 500,
+          statusMessage: "\u041A\u043D\u0438\u0433\u0430 \u0432\u0436\u0435 \u0456\u0441\u043D\u0443\u0454"
+        });
+      }
+      book = await db.book.create({
+        data: {
+          title,
+          slug,
+          description,
+          coverURLs,
+          year,
+          pages,
+          genreIds,
+          authorIds,
+          price,
+          creatorId: session.user.id
+        }
+      });
+      return book;
+    } catch (error) {
+      console.log(error);
+      throw createError({
+        statusCode: 500,
+        statusMessage: "\u041F\u043E\u043C\u0438\u043B\u043A\u0430 \u043F\u0440\u0438 \u0441\u0442\u0432\u043E\u0440\u0435\u043D\u043D\u0456 \u043D\u043E\u0432\u043E\u0457 \u043A\u043D\u0438\u0433\u0438"
       });
     }
   } else {
@@ -2190,7 +2359,7 @@ const index_patch = defineEventHandler(async (event) => {
   const cyrillicToTranslit = CyrillicToTranslit({ preset: "uk" });
   if (session.user && ((_a = session.user) == null ? void 0 : _a.role) === "admin") {
     const { name } = await readValidatedBody(event, (body) => genreSchema.parse(body));
-    const slug = cyrillicToTranslit.transform(name, "_").toLowerCase();
+    const slug = cyrillicToTranslit.transform(name, "-").toLowerCase();
     try {
       const genre = await db.genre.update({
         where: {
@@ -2241,7 +2410,7 @@ const index_post = defineEventHandler(async (event) => {
   const cyrillicToTranslit = CyrillicToTranslit({ preset: "uk" });
   if (session.user && ((_a = session.user) == null ? void 0 : _a.role) === "admin") {
     const { name } = await readValidatedBody(event, (body) => genreSchema.parse(body));
-    const slug = cyrillicToTranslit.transform(name, "_").toLowerCase();
+    const slug = cyrillicToTranslit.transform(name, "-").toLowerCase();
     try {
       let genre = await db.genre.findUnique({
         where: { slug }
@@ -2254,7 +2423,7 @@ const index_post = defineEventHandler(async (event) => {
         data: {
           name,
           slug,
-          createdBy: session.user.id
+          creatorId: session.user.id
         }
       });
       return genre;

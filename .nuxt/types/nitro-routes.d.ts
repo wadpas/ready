@@ -21,6 +21,15 @@ declare module "nitropack/types" {
       'get': Simplify<Serialize<Awaited<ReturnType<typeof import('../../server/api/authors/index.get').default>>>>
       'post': Simplify<Serialize<Awaited<ReturnType<typeof import('../../server/api/authors/index.post').default>>>>
     }
+    '/api/books/:slug': {
+      'delete': Simplify<Serialize<Awaited<ReturnType<typeof import('../../server/api/books/[slug]/index.delete').default>>>>
+      'get': Simplify<Serialize<Awaited<ReturnType<typeof import('../../server/api/books/[slug]/index.get').default>>>>
+      'patch': Simplify<Serialize<Awaited<ReturnType<typeof import('../../server/api/books/[slug]/index.patch').default>>>>
+    }
+    '/api/books': {
+      'get': Simplify<Serialize<Awaited<ReturnType<typeof import('../../server/api/books/index.get').default>>>>
+      'post': Simplify<Serialize<Awaited<ReturnType<typeof import('../../server/api/books/index.post').default>>>>
+    }
     '/api/genres/:slug': {
       'delete': Simplify<Serialize<Awaited<ReturnType<typeof import('../../server/api/genres/[slug]/index.delete').default>>>>
       'get': Simplify<Serialize<Awaited<ReturnType<typeof import('../../server/api/genres/[slug]/index.get').default>>>>

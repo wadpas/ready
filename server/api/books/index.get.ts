@@ -1,10 +1,10 @@
 import db from '~/server/utils/db'
 
 export default defineEventHandler(async (event) => {
-  const authors = await db.author.findMany({
+  const books = await db.book.findMany({
     orderBy: {
-      name: 'asc',
+      createdAt: 'desc',
     },
   })
-  return authors
+  return books
 })

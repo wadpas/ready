@@ -10,6 +10,11 @@
     to="/admin/authors">
     authors
   </NuxtLink>
+  <NuxtLink
+    class="mr-2 text-sky-500"
+    to="/admin/books">
+    books
+  </NuxtLink>
 </template>
 
 <script setup lang="ts">

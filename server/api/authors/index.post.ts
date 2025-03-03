@@ -8,7 +8,7 @@ export default defineEventHandler(async (event) => {
 
   if (session.user && session.user?.role === 'admin') {
     const { name } = await readValidatedBody(event, (body) => authorSchema.parse(body))
-    const slug = cyrillicToTranslit.transform(name, '_').toLowerCase()
+    const slug = cyrillicToTranslit.transform(name, '-').toLowerCase()
 
     try {
       let author = await db.author.findUnique({
@@ -23,7 +23,7 @@ export default defineEventHandler(async (event) => {
         data: {
           name,
           slug,
-          createdBy: session.user.id,
+          creatorId: session.user.id,
         },
       })
       return author
