@@ -2,7 +2,7 @@
 export default defineNuxtConfig({
   compatibilityDate: '2024-11-01',
   devtools: { enabled: true, componentInspector: false },
-  modules: ['@nuxtjs/tailwindcss', 'shadcn-nuxt', '@nuxtjs/color-mode', 'nuxt-auth-utils', '@nuxt/icon'],
+  modules: ['@nuxtjs/tailwindcss', 'shadcn-nuxt', '@nuxtjs/color-mode', 'nuxt-auth-utils', '@nuxt/icon', '@nuxt/image'],
   css: ['~/assets/css/tailwind.css'],
   postcss: {
     plugins: {

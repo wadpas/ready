@@ -121,6 +121,20 @@
         </FormField>
         <FormField
           v-slot="{ componentField }"
+          name="pages">
+          <FormItem>
+            <FormLabel>Кількість сторінок</FormLabel>
+            <FormControl>
+              <Input
+                type="number"
+                v-bind="componentField" />
+            </FormControl>
+            <FormDescription />
+            <FormMessage />
+          </FormItem>
+        </FormField>
+        <FormField
+          v-slot="{ componentField }"
           name="price">
           <FormItem>
             <FormLabel>Ціна</FormLabel>
@@ -135,24 +149,9 @@
         </FormField>
         <FormField
           v-slot="{ componentField }"
-          name="pages">
-          <FormItem>
-            <FormLabel>Сторінки</FormLabel>
-            <FormControl>
-              <Input
-                type="number"
-                placeholder="500"
-                v-bind="componentField" />
-            </FormControl>
-            <FormDescription />
-            <FormMessage />
-          </FormItem>
-        </FormField>
-        <FormField
-          v-slot="{ componentField }"
           name="year">
           <FormItem>
-            <FormLabel>Рік</FormLabel>
+            <FormLabel>Рік видання</FormLabel>
             <FormControl>
               <Input
                 type="number"
@@ -173,7 +172,7 @@
                 @update:model-value="handleChange" />
             </FormControl>
             <div class="space-y-1 leading-none">
-              <FormLabel>Акційна</FormLabel>
+              <FormLabel>Акція</FormLabel>
               <FormMessage />
             </div>
           </FormItem>
@@ -261,8 +260,8 @@
       authorIds: [],
       genreIds: [],
       description: '',
-      price: 200,
       pages: 500,
+      price: 399,
       year: 2020,
       isFeatured: true,
       isAvailable: true,
@@ -271,8 +270,7 @@
   })
 
   const onSubmit = form.handleSubmit(async (values) => {
-    console.log(values)
-
+    values.price = Math.max(Math.floor(values.pages - Math.random() * 200), 199)
     try {
       if (isEditing.value) {
         await $fetch(`/api/books/${(route.params as RouteParams).slug}`, {

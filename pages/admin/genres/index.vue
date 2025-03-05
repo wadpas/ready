@@ -1,6 +1,6 @@
 <template>
   <div class="flex-col">
-    <div class="flex-col p-8 pt-6 space-y-4">
+    <div class="flex-col pt-6 space-y-4">
       <AdminGenresMain />
     </div>
   </div>

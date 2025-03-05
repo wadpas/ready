@@ -1,5 +1,6 @@
 <template>
-  <div class="h-screen mx-auto max-w-7xl">
+  <Navbar />
+  <div class="h-screen mx-auto max-w-[1600px]">
     <slot />
   </div>
 </template>

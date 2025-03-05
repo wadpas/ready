@@ -3,7 +3,7 @@ import { Server } from 'node:http';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { parentPort, threadId } from 'node:worker_threads';
-import { getRequestHeader, splitCookiesString, setResponseStatus, setResponseHeader, send, getRequestHeaders, defineEventHandler, handleCacheHeaders, createEvent, fetchWithEvent, isEvent, eventHandler, getResponseStatus, setResponseHeaders, setHeaders, sendRedirect, proxyRequest, createError, getRequestURL, getQuery as getQuery$1, useSession, createApp, createRouter as createRouter$1, toNodeListener, lazyEventHandler, getRouterParam, readBody, readValidatedBody, getResponseStatusText } from 'file://C:/Users/Wad/Desktop/apps/books-nuxt/node_modules/h3/dist/index.mjs';
+import { getRequestHeader, splitCookiesString, setResponseStatus, setResponseHeader, send, getRequestHeaders, defineEventHandler, handleCacheHeaders, createEvent, fetchWithEvent, isEvent, eventHandler, getResponseStatus, setResponseHeaders, setHeaders, sendRedirect, proxyRequest, createError, getRequestURL, getQuery as getQuery$1, useSession, lazyEventHandler, useBase, createApp, createRouter as createRouter$1, toNodeListener, getRouterParam, readBody, readValidatedBody, getResponseStatusText } from 'file://C:/Users/Wad/Desktop/apps/books-nuxt/node_modules/h3/dist/index.mjs';
 import { withQuery, joinURL, withTrailingSlash, parseURL, withoutBase, getQuery, joinRelativeURL } from 'file://C:/Users/Wad/Desktop/apps/books-nuxt/node_modules/ufo/dist/index.mjs';
 import defu, { defuFn, defu as defu$1 } from 'file://C:/Users/Wad/Desktop/apps/books-nuxt/node_modules/defu/dist/defu.mjs';
 import { FetchError, createFetch as createFetch$1, Headers as Headers$1 } from 'file://C:/Users/Wad/Desktop/apps/books-nuxt/node_modules/ofetch/dist/node.mjs';
@@ -27,12 +27,14 @@ import { consola } from 'file://C:/Users/Wad/Desktop/apps/books-nuxt/node_module
 import { getContext } from 'file://C:/Users/Wad/Desktop/apps/books-nuxt/node_modules/unctx/dist/index.mjs';
 import { captureRawStackTrace, parseRawStackTrace } from 'file://C:/Users/Wad/Desktop/apps/books-nuxt/node_modules/errx/dist/index.js';
 import { isVNode, unref, version } from 'file://C:/Users/Wad/Desktop/apps/books-nuxt/node_modules/vue/index.mjs';
-import { basename } from 'file://C:/Users/Wad/Desktop/apps/books-nuxt/node_modules/pathe/dist/index.mjs';
+import { basename, isAbsolute } from 'file://C:/Users/Wad/Desktop/apps/books-nuxt/node_modules/pathe/dist/index.mjs';
 import { getIcons } from 'file://C:/Users/Wad/Desktop/apps/books-nuxt/node_modules/@iconify/utils/lib/index.mjs';
 import { hash } from 'file://C:/Users/Wad/Desktop/apps/books-nuxt/node_modules/ohash/dist/index.mjs';
 import { createStorage, prefixStorage } from 'file://C:/Users/Wad/Desktop/apps/books-nuxt/node_modules/unstorage/dist/index.mjs';
 import unstorage_47drivers_47fs from 'file://C:/Users/Wad/Desktop/apps/books-nuxt/node_modules/unstorage/drivers/fs.mjs';
 import { collections } from 'file://C:/Users/Wad/Desktop/apps/books-nuxt/.nuxt/nuxt-icon-server-bundle.mjs';
+import { fileURLToPath } from 'node:url';
+import { ipxFSStorage, ipxHttpStorage, createIPX, createIPXH3Handler } from 'file://C:/Users/Wad/Desktop/apps/books-nuxt/node_modules/ipx/dist/index.mjs';
 import { toRouteMatcher, createRouter } from 'file://C:/Users/Wad/Desktop/apps/books-nuxt/node_modules/radix3/dist/index.mjs';
 import { defineHeadPlugin } from 'file://C:/Users/Wad/Desktop/apps/books-nuxt/node_modules/@unhead/shared/dist/index.mjs';
 
@@ -800,6 +802,18 @@ const _inlineRuntimeConfig = {
   },
   "icon": {
     "serverKnownCssClasses": []
+  },
+  "ipx": {
+    "baseURL": "/_ipx",
+    "alias": {},
+    "fs": {
+      "dir": [
+        "C:/Users/Wad/Desktop/apps/books-nuxt/public"
+      ]
+    },
+    "http": {
+      "domains": []
+    }
   }
 };
 const envOptions = {
@@ -1651,6 +1665,24 @@ const _6vegE0 = defineCachedEventHandler(async (event) => {
   // 1 week
 });
 
+const _7C0wvA = lazyEventHandler(() => {
+  const opts = useRuntimeConfig().ipx || {};
+  const fsDir = opts?.fs?.dir ? (Array.isArray(opts.fs.dir) ? opts.fs.dir : [opts.fs.dir]).map((dir) => isAbsolute(dir) ? dir : fileURLToPath(new URL(dir, globalThis._importMeta_.url))) : void 0;
+  const fsStorage = opts.fs?.dir ? ipxFSStorage({ ...opts.fs, dir: fsDir }) : void 0;
+  const httpStorage = opts.http?.domains ? ipxHttpStorage({ ...opts.http }) : void 0;
+  if (!fsStorage && !httpStorage) {
+    throw new Error("IPX storage is not configured!");
+  }
+  const ipxOptions = {
+    ...opts,
+    storage: fsStorage || httpStorage,
+    httpStorage
+  };
+  const ipx = createIPX(ipxOptions);
+  const ipxHandler = createIPXH3Handler(ipx);
+  return useBase(opts.baseURL, ipxHandler);
+});
+
 const _lazy_Ej1chm = () => Promise.resolve().then(function () { return github_get$1; });
 const _lazy_EwjYhE = () => Promise.resolve().then(function () { return login_post$1; });
 const _lazy_51VOrk = () => Promise.resolve().then(function () { return register_post$1; });
@@ -1694,6 +1726,7 @@ const handlers = [
   { route: '/api/_auth/session', handler: _56IsM9, lazy: false, middleware: false, method: "delete" },
   { route: '/api/_auth/session', handler: _D49Rar, lazy: false, middleware: false, method: "get" },
   { route: '/api/_nuxt_icon/:collection', handler: _6vegE0, lazy: false, middleware: false, method: undefined },
+  { route: '/_ipx/**', handler: _7C0wvA, lazy: false, middleware: false, method: undefined },
   { route: '/**', handler: _lazy_Sgl683, lazy: true, middleware: false, method: undefined }
 ];
 
