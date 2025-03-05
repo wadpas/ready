@@ -7,8 +7,9 @@ export default defineEventHandler(async (event) => {
   const cyrillicToTranslit = CyrillicToTranslit({ preset: 'uk' })
 
   if (session.user && session.user?.role === 'admin') {
-    const { title } = await readValidatedBody(event, (body) => bookSchema.parse(body))
-    const slug = cyrillicToTranslit.transform(name, '-').toLowerCase()
+    const { title, description, coverURLs, year, pages, genreIds, authorIds, price, isFeatured, isAvailable } =
+      await readValidatedBody(event, (body) => bookSchema.parse(body))
+    const slug = cyrillicToTranslit.transform(title.trim(), '-').replaceAll('.', '').replaceAll(',', '').toLowerCase()
 
     try {
       const book = await db.book.update({
@@ -18,6 +19,16 @@ export default defineEventHandler(async (event) => {
         data: {
           title,
           slug,
+          description,
+          coverURLs: coverURLs,
+          year,
+          pages,
+          genreIds,
+          authorIds,
+          price,
+          creatorId: session.user.id,
+          isFeatured,
+          isAvailable,
         },
       })
       return book

@@ -5,6 +5,10 @@ export default defineEventHandler(async (event) => {
     where: {
       slug: event.context.params?.slug,
     },
+    include: {
+      authors: true,
+      genres: true,
+    },
   })
   return genre
 })

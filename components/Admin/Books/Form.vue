@@ -40,25 +40,32 @@
           name="authorIds">
           <FormItem>
             <FormLabel>Автор</FormLabel>
-            <Select
-              :multiple="true"
-              v-bind="componentField">
-              <FormControl>
-                <SelectTrigger>
-                  <SelectValue placeholder="Виберіть автора" />
-                </SelectTrigger>
-              </FormControl>
-              <SelectContent>
-                <SelectGroup>
-                  <SelectItem
-                    v-for="author in authors"
-                    :key="author.id"
-                    :value="author.id">
-                    {{ author.name }}
-                  </SelectItem>
-                </SelectGroup>
-              </SelectContent>
-            </Select>
+            <div class="flex">
+              <Select
+                :multiple="true"
+                v-bind="componentField">
+                <FormControl>
+                  <SelectTrigger>
+                    <SelectValue placeholder="Виберіть автора" />
+                  </SelectTrigger>
+                </FormControl>
+                <SelectContent>
+                  <SelectGroup>
+                    <SelectItem
+                      v-for="author in authors"
+                      :key="author.id"
+                      :value="author.id">
+                      {{ author.name }}
+                    </SelectItem>
+                  </SelectGroup>
+                </SelectContent>
+              </Select>
+              <Button
+                type="button"
+                @click="$router.push('/admin/authors/new')">
+                +
+              </Button>
+            </div>
             <FormMessage />
           </FormItem>
         </FormField>
@@ -67,26 +74,33 @@
           name="genreIds">
           <FormItem>
             <FormLabel>Жанр</FormLabel>
-            <Select
-              :multiple="true"
-              v-bind="componentField">
-              <FormControl>
-                <SelectTrigger>
-                  <SelectValue placeholder="Виберіть жанр" />
-                </SelectTrigger>
-              </FormControl>
-              <SelectContent>
-                <SelectGroup>
-                  <SelectItem
-                    multiple="true"
-                    v-for="genre in genres"
-                    :key="genre.id"
-                    :value="genre.id">
-                    {{ genre.name }}
-                  </SelectItem>
-                </SelectGroup>
-              </SelectContent>
-            </Select>
+            <div class="flex">
+              <Select
+                :multiple="true"
+                v-bind="componentField">
+                <FormControl>
+                  <SelectTrigger>
+                    <SelectValue placeholder="Виберіть жанр" />
+                  </SelectTrigger>
+                </FormControl>
+                <SelectContent>
+                  <SelectGroup>
+                    <SelectItem
+                      multiple="true"
+                      v-for="genre in genres"
+                      :key="genre.id"
+                      :value="genre.id">
+                      {{ genre.name }}
+                    </SelectItem>
+                  </SelectGroup>
+                </SelectContent>
+              </Select>
+              <Button
+                type="button"
+                @click="$router.push('/admin/genres/new')">
+                +
+              </Button>
+            </div>
             <FormMessage />
           </FormItem>
         </FormField>
@@ -113,41 +127,12 @@
             <FormControl>
               <Input
                 type="number"
-                placeholder="199"
                 v-bind="componentField" />
             </FormControl>
             <FormDescription />
             <FormMessage />
           </FormItem>
         </FormField>
-        <!-- <FormField
-          v-slot="{ componentField }"
-          name="coverURLs">
-          <FormItem>
-            <FormLabel>Жанр</FormLabel>
-            <Select
-              :multiple="true"
-              v-bind="componentField">
-              <FormControl>
-                <SelectTrigger>
-                  <SelectValue placeholder="Виберіть обкладинку" />
-                </SelectTrigger>
-              </FormControl>
-              <SelectContent>
-                <SelectGroup>
-                  <SelectItem
-                    multiple="true"
-                    v-for="genre in genres"
-                    :key="genre.id"
-                    :value="genre.id">
-                    {{ genre.name }}
-                  </SelectItem>
-                </SelectGroup>
-              </SelectContent>
-            </Select>
-            <FormMessage />
-          </FormItem>
-        </FormField> -->
         <FormField
           v-slot="{ componentField }"
           name="pages">
@@ -209,12 +194,27 @@
           </FormItem>
         </FormField>
       </div>
+      <FormField
+        v-slot="{ componentField }"
+        name="coverURLs">
+        <FormItem>
+          <FormLabel>Обкладинка</FormLabel>
+          <FormControl>
+            <Input
+              type="text"
+              placeholder="URL"
+              v-bind="componentField" />
+          </FormControl>
+          <FormDescription />
+          <FormMessage />
+        </FormItem>
+      </FormField>
       <div class="flex justify-end">
         <Button type="submit"> Зберегти </Button>
         <Button
           class="ml-4"
           type="button"
-          @click="navigateTo('/admin/books')">
+          @click="$router.back()">
           Скасувати
         </Button>
       </div>
@@ -237,6 +237,7 @@
 
   const isEditing = ref(true)
   const isModalVisible = ref(false)
+  const router = useRouter()
   const route = useRoute()
 
   const { data: currentBook } = await useFetch(`/api/books/${(route.params as RouteParams).slug}`)
@@ -254,7 +255,19 @@
   const formSchema = toTypedSchema(bookSchema)
   const form = useForm({
     validationSchema: formSchema,
-    initialValues: currentBook.value || {},
+    // @ts-ignore
+    initialValues: currentBook.value || {
+      title: '',
+      authorIds: [],
+      genreIds: [],
+      description: '',
+      price: 200,
+      pages: 500,
+      year: 2020,
+      isFeatured: true,
+      isAvailable: true,
+      coverURLs: [],
+    },
   })
 
   const onSubmit = form.handleSubmit(async (values) => {
@@ -272,7 +285,7 @@
           body: values,
         })
       }
-      navigateTo('/admin/books')
+      router.back()
       toast({
         title: 'Операція успішна',
         description: 'Всі дані були успішно збережені',

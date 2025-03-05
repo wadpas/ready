@@ -18,10 +18,10 @@ export const bookSchema = z.object({
   authorIds: z.string().array().min(1, { message: 'Додайте автора книги' }),
   genreIds: z.string().array().min(1, { message: 'Додайте жанр книги' }),
   description: z.string().min(1, { message: 'Введіть опис книги' }),
-  coverURLs: z.string().array().min(1, { message: 'Додайте обкладинку книги' }),
+  coverURLs: z.string(),
   year: z.coerce.number().min(4, { message: 'Введіть рік видання' }),
   pages: z.coerce.number().min(1, { message: 'Введіть кількість сторінок' }),
   price: z.coerce.number().min(1, { message: 'Введіть ціну книги' }),
-  isFeatured: z.boolean().default(false).optional(),
+  isFeatured: z.boolean().default(true).optional(),
   isAvailable: z.boolean().default(true).optional(),
 })

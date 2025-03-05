@@ -29,6 +29,7 @@
     getPaginationRowModel: getPaginationRowModel(),
     onColumnFiltersChange: (updaterOrValue) => valueUpdater(updaterOrValue, columnFilters),
     getFilteredRowModel: getFilteredRowModel(),
+    initialState: { pagination: { pageSize: 30 } },
     state: {
       get columnFilters() {
         return columnFilters.value

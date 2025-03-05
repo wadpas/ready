@@ -22,8 +22,10 @@
 </template>
 
 <script setup lang="ts">
+  import type { Genre } from '@prisma/client'
   import { columns } from '~/components/Admin/Genres/columns'
-  const { data: genres, status } = await useFetch(`/api/genres`, {
+
+  const { data: genres, status } = await useFetch<Genre[]>(`/api/genres`, {
     key: 'genres',
   })
 </script>

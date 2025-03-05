@@ -43,7 +43,7 @@
       <Button
         class="ml-4"
         type="button"
-        @click="navigateTo('/admin/genres')">
+        @click="$router.back()">
         Скасувати
       </Button>
     </form>
@@ -64,6 +64,7 @@
 
   const isEditing = ref(true)
   const isModalVisible = ref(false)
+  const router = useRouter()
   const route = useRoute()
 
   const { data: currentGenre } = await useFetch(`/api/genres/${(route.params as RouteParams).slug}`)
@@ -95,7 +96,7 @@
           body: values,
         })
       }
-      navigateTo('/admin/genres')
+      router.back()
       toast({
         title: 'Операція успішна',
         description: 'Всі дані були успішно збережені',

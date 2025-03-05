@@ -22,8 +22,10 @@
 </template>
 
 <script setup lang="ts">
+  import type { Author } from '@prisma/client'
   import { columns } from '~/components/Admin/Authors/columns'
-  const { data: authors, status } = await useFetch(`/api/authors`, {
+
+  const { data: authors, status } = await useFetch<Author[]>(`/api/authors`, {
     key: 'authors',
   })
 </script>

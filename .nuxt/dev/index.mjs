@@ -1523,11 +1523,11 @@ const bookSchema = z.object({
   authorIds: z.string().array().min(1, { message: "\u0414\u043E\u0434\u0430\u0439\u0442\u0435 \u0430\u0432\u0442\u043E\u0440\u0430 \u043A\u043D\u0438\u0433\u0438" }),
   genreIds: z.string().array().min(1, { message: "\u0414\u043E\u0434\u0430\u0439\u0442\u0435 \u0436\u0430\u043D\u0440 \u043A\u043D\u0438\u0433\u0438" }),
   description: z.string().min(1, { message: "\u0412\u0432\u0435\u0434\u0456\u0442\u044C \u043E\u043F\u0438\u0441 \u043A\u043D\u0438\u0433\u0438" }),
-  coverURLs: z.string().array().min(1, { message: "\u0414\u043E\u0434\u0430\u0439\u0442\u0435 \u043E\u0431\u043A\u043B\u0430\u0434\u0438\u043D\u043A\u0443 \u043A\u043D\u0438\u0433\u0438" }),
+  coverURLs: z.string(),
   year: z.coerce.number().min(4, { message: "\u0412\u0432\u0435\u0434\u0456\u0442\u044C \u0440\u0456\u043A \u0432\u0438\u0434\u0430\u043D\u043D\u044F" }),
   pages: z.coerce.number().min(1, { message: "\u0412\u0432\u0435\u0434\u0456\u0442\u044C \u043A\u0456\u043B\u044C\u043A\u0456\u0441\u0442\u044C \u0441\u0442\u043E\u0440\u0456\u043D\u043E\u043A" }),
   price: z.coerce.number().min(1, { message: "\u0412\u0432\u0435\u0434\u0456\u0442\u044C \u0446\u0456\u043D\u0443 \u043A\u043D\u0438\u0433\u0438" }),
-  isFeatured: z.boolean().default(false).optional(),
+  isFeatured: z.boolean().default(true).optional(),
   isAvailable: z.boolean().default(true).optional()
 });
 
@@ -2126,7 +2126,7 @@ const index_post$4 = defineEventHandler(async (event) => {
   const cyrillicToTranslit = CyrillicToTranslit({ preset: "uk" });
   if (session.user && ((_a = session.user) == null ? void 0 : _a.role) === "admin") {
     const { name } = await readValidatedBody(event, (body) => authorSchema.parse(body));
-    const slug = cyrillicToTranslit.transform(name, "-").toLowerCase();
+    const slug = cyrillicToTranslit.transform(name.trim(), "-").replaceAll(".", "").replaceAll(",", "").toLowerCase();
     try {
       let author = await db.author.findUnique({
         where: { slug }
@@ -2196,6 +2196,10 @@ const index_get$6 = defineEventHandler(async (event) => {
   const genre = await db.book.findUnique({
     where: {
       slug: (_a = event.context.params) == null ? void 0 : _a.slug
+    },
+    include: {
+      authors: true,
+      genres: true
     }
   });
   return genre;
@@ -2211,8 +2215,8 @@ const index_patch$2 = defineEventHandler(async (event) => {
   const session = await requireUserSession(event);
   const cyrillicToTranslit = CyrillicToTranslit({ preset: "uk" });
   if (session.user && ((_a = session.user) == null ? void 0 : _a.role) === "admin") {
-    const { title } = await readValidatedBody(event, (body) => bookSchema.parse(body));
-    const slug = cyrillicToTranslit.transform(name, "-").toLowerCase();
+    const { title, description, coverURLs, year, pages, genreIds, authorIds, price, isFeatured, isAvailable } = await readValidatedBody(event, (body) => bookSchema.parse(body));
+    const slug = cyrillicToTranslit.transform(title.trim(), "-").replaceAll(".", "").replaceAll(",", "").toLowerCase();
     try {
       const book = await db.book.update({
         where: {
@@ -2220,7 +2224,17 @@ const index_patch$2 = defineEventHandler(async (event) => {
         },
         data: {
           title,
-          slug
+          slug,
+          description,
+          coverURLs,
+          year,
+          pages,
+          genreIds,
+          authorIds,
+          price,
+          creatorId: session.user.id,
+          isFeatured,
+          isAvailable
         }
       });
       return book;
@@ -2246,7 +2260,11 @@ const index_patch$3 = /*#__PURE__*/Object.freeze({
 const index_get$4 = defineEventHandler(async (event) => {
   const books = await db.book.findMany({
     orderBy: {
-      createdAt: "desc"
+      title: "asc"
+    },
+    include: {
+      authors: true,
+      genres: true
     }
   });
   return books;
@@ -2263,7 +2281,7 @@ const index_post$2 = defineEventHandler(async (event) => {
   const cyrillicToTranslit = CyrillicToTranslit({ preset: "uk" });
   if (session.user && ((_a = session.user) == null ? void 0 : _a.role) === "admin") {
     const { title, description, coverURLs, year, pages, genreIds, authorIds, price, isFeatured, isAvailable } = await readValidatedBody(event, (body) => bookSchema.parse(body));
-    const slug = cyrillicToTranslit.transform(title, "-").toLowerCase();
+    const slug = cyrillicToTranslit.transform(title.trim(), "-").replaceAll(".", "").replaceAll(",", "").toLowerCase();
     try {
       let book = await db.book.findUnique({
         where: { slug }
@@ -2279,13 +2297,15 @@ const index_post$2 = defineEventHandler(async (event) => {
           title,
           slug,
           description,
-          coverURLs,
+          coverURLs: [coverURLs],
           year,
           pages,
           genreIds,
           authorIds,
           price,
-          creatorId: session.user.id
+          creatorId: session.user.id,
+          isFeatured,
+          isAvailable
         }
       });
       return book;
@@ -2359,7 +2379,7 @@ const index_patch = defineEventHandler(async (event) => {
   const cyrillicToTranslit = CyrillicToTranslit({ preset: "uk" });
   if (session.user && ((_a = session.user) == null ? void 0 : _a.role) === "admin") {
     const { name } = await readValidatedBody(event, (body) => genreSchema.parse(body));
-    const slug = cyrillicToTranslit.transform(name, "-").toLowerCase();
+    const slug = cyrillicToTranslit.transform(name.trim(), "-").replaceAll(".", "").replaceAll(",", "").toLowerCase();
     try {
       const genre = await db.genre.update({
         where: {
@@ -2393,7 +2413,7 @@ const index_patch$1 = /*#__PURE__*/Object.freeze({
 const index_get = defineEventHandler(async (event) => {
   const genres = await db.genre.findMany({
     orderBy: {
-      createdAt: "desc"
+      name: "asc"
     }
   });
   return genres;
@@ -2410,12 +2430,11 @@ const index_post = defineEventHandler(async (event) => {
   const cyrillicToTranslit = CyrillicToTranslit({ preset: "uk" });
   if (session.user && ((_a = session.user) == null ? void 0 : _a.role) === "admin") {
     const { name } = await readValidatedBody(event, (body) => genreSchema.parse(body));
-    const slug = cyrillicToTranslit.transform(name, "-").toLowerCase();
+    const slug = cyrillicToTranslit.transform(name.trim(), "-").replaceAll(".", "").replaceAll(",", "").toLowerCase();
     try {
       let genre = await db.genre.findUnique({
         where: { slug }
       });
-      console.log(genre);
       if (genre) {
         throw new Error();
       }

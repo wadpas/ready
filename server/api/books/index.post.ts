@@ -9,7 +9,7 @@ export default defineEventHandler(async (event) => {
   if (session.user && session.user?.role === 'admin') {
     const { title, description, coverURLs, year, pages, genreIds, authorIds, price, isFeatured, isAvailable } =
       await readValidatedBody(event, (body) => bookSchema.parse(body))
-    const slug = cyrillicToTranslit.transform(title, '-').toLowerCase()
+    const slug = cyrillicToTranslit.transform(title.trim(), '-').replaceAll('.', '').replaceAll(',', '').toLowerCase()
 
     try {
       let book = await db.book.findUnique({
@@ -21,19 +21,20 @@ export default defineEventHandler(async (event) => {
           statusMessage: 'Книга вже існує',
         })
       }
-
       book = await db.book.create({
         data: {
           title,
           slug,
           description,
-          coverURLs,
+          coverURLs: [coverURLs],
           year,
           pages,
           genreIds,
           authorIds,
           price,
           creatorId: session.user.id,
+          isFeatured,
+          isAvailable,
         },
       })
       return book

@@ -1,17 +1,17 @@
 <template>
   <div>Admin page</div>
   <NuxtLink
-    class="mr-2 text-sky-500"
+    class="mr-2 text-sky-600"
     to="/admin/genres">
     genres
   </NuxtLink>
   <NuxtLink
-    class="mr-2 text-sky-500"
+    class="mr-2 text-sky-600"
     to="/admin/authors">
     authors
   </NuxtLink>
   <NuxtLink
-    class="mr-2 text-sky-500"
+    class="mr-2 text-sky-600"
     to="/admin/books">
     books
   </NuxtLink>

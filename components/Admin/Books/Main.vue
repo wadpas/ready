@@ -22,8 +22,10 @@
 </template>
 
 <script setup lang="ts">
+  import type { Book } from '@prisma/client'
   import { columns } from '~/components/Admin/Books/columns'
-  const { data: books, status } = await useFetch(`/api/books`, {
+
+  const { data: books, status } = await useFetch<Book[]>(`/api/books`, {
     key: 'books',
   })
 </script>
