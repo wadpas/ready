@@ -10,4 +10,10 @@ export default defineNuxtConfig({
       autoprefixer: {},
     },
   },
+  routeRules: {
+    '/': {
+      // Temporary redirect using a 307 status code
+      redirect: '/books',
+    },
+  },
 })

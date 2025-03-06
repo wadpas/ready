@@ -9,6 +9,10 @@ export default defineEventHandler(async (event) => {
       authors: true,
       genres: true,
     },
+    omit: {
+      authorIds: true,
+      genreIds: true,
+    },
   })
   return books
 })

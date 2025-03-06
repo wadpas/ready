@@ -71,21 +71,6 @@ model Book {
   @@map("books")
 }
 
-model Genre {
-  id        String   @id @default(auto()) @map("_id") @db.ObjectId
-  name      String
-  slug      String
-  bookIds   String[] @db.ObjectId
-  books     Book[]   @relation(fields: [bookIds], references: [id])
-  creatorId String   @db.ObjectId
-  user      User     @relation(fields: [creatorId], references: [id], onDelete: Cascade)
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  @@unique([slug])
-  @@map("genres")
-}
-
 model Author {
   id        String   @id @default(auto()) @map("_id") @db.ObjectId
   name      String
@@ -93,12 +78,27 @@ model Author {
   bookIds   String[] @db.ObjectId
   books     Book[]   @relation(fields: [bookIds], references: [id])
   creatorId String   @db.ObjectId
-  user      User     @relation(fields: [creatorId], references: [id], onDelete: Cascade)
+  creator   User     @relation(fields: [creatorId], references: [id], onDelete: Cascade)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
   @@unique([slug])
   @@map("authors")
+}
+
+model Genre {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  name      String
+  slug      String
+  bookIds   String[] @db.ObjectId
+  books     Book[]   @relation(fields: [bookIds], references: [id])
+  creatorId String   @db.ObjectId
+  creator   User     @relation(fields: [creatorId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([slug])
+  @@map("genres")
 }
 
 model Order {

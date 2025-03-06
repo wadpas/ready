@@ -560,6 +560,12 @@ const _inlineRuntimeConfig = {
       "/__nuxt_error": {
         "cache": false
       },
+      "/": {
+        "redirect": {
+          "to": "/books",
+          "statusCode": 307
+        }
+      },
       "/_nuxt/builds/meta/**": {
         "headers": {
           "cache-control": "public, max-age=31536000, immutable"
@@ -2298,6 +2304,10 @@ const index_get$4 = defineEventHandler(async (event) => {
     include: {
       authors: true,
       genres: true
+    },
+    omit: {
+      authorIds: true,
+      genreIds: true
     }
   });
   return books;

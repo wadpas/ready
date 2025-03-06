@@ -14,13 +14,11 @@
         <template v-if="user">
           <DropdownMenu v-if="user.role === 'admin'">
             <DropdownMenuTrigger as-child>
-              <Button
-                variant="ghost"
-                class="relative w-6 h-6 rounded-full">
-                <Avatar>
+              <Button class="relative w-6 h-6 rounded-full">
+                <Avatar class="bg-white">
                   <Icon
                     name="lucide:cog"
-                    class="w-6 h-6">
+                    class="w-6 h-6 hover:scale-105">
                   </Icon>
                 </Avatar>
               </Button>
@@ -60,12 +58,12 @@
           <DropdownMenu>
             <DropdownMenuTrigger as-child>
               <Button
-                variant="ghost"
+                variant="secondary"
                 class="relative w-6 h-6 rounded-full">
-                <Avatar>
+                <Avatar class="bg-white">
                   <Icon
                     name="lucide:circle-user-round"
-                    class="w-6 h-6">
+                    class="w-6 h-6 hover:scale-105">
                   </Icon>
                 </Avatar>
               </Button>

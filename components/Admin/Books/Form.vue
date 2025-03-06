@@ -227,20 +227,19 @@
 </template>
 
 <script setup lang="ts">
-  import type { APIError, RouteParams } from '~/types'
+  import type { APIError, Book, Genre, RouteParams } from '~/types'
   import { toTypedSchema } from '@vee-validate/zod'
   import { useForm } from 'vee-validate'
   import { bookSchema } from '~/server/utils/validations'
   import { toast } from '~/components/ui/toast'
-  import type { Genre } from '@prisma/client'
 
   const isEditing = ref(true)
   const isModalVisible = ref(false)
   const router = useRouter()
   const route = useRoute()
 
-  const { data: currentBook } = await useFetch(`/api/books/${(route.params as RouteParams).slug}`)
-  const { data: authors } = await useFetch<Genre[]>(`/api/authors`)
+  const { data: currentBook } = await useFetch<Book>(`/api/books/${(route.params as RouteParams).slug}`)
+  const { data: authors } = await useFetch<Author[]>(`/api/authors`)
   const { data: genres } = await useFetch<Genre[]>(`/api/genres`)
 
   watchEffect(() => {

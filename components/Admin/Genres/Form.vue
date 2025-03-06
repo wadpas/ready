@@ -56,7 +56,7 @@
 </template>
 
 <script setup lang="ts">
-  import type { APIError, RouteParams } from '~/types'
+  import type { APIError, Genre, RouteParams } from '~/types'
   import { toTypedSchema } from '@vee-validate/zod'
   import { useForm } from 'vee-validate'
   import { genreSchema } from '~/server/utils/validations'
@@ -67,7 +67,7 @@
   const router = useRouter()
   const route = useRoute()
 
-  const { data: currentGenre } = await useFetch(`/api/genres/${(route.params as RouteParams).slug}`)
+  const { data: currentGenre } = await useFetch<Genre>(`/api/genres/${(route.params as RouteParams).slug}`)
 
   watchEffect(() => {
     if (route.params.slug === 'new') {
